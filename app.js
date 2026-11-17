@@ -376,26 +376,37 @@ function openGame(game) {
   if (game === "football") return openFootball();
 }
 
+
 function openTic() {
   showGame(t("tic"), `
     <p class="muted">${t("nineBoards")}</p>
-    <div class="row">
+
+    <div class="tic-toolbar">
       <button class="choice" id="solo">${t("solo")}</button>
       <button class="choice" id="two">${t("two")}</button>
     </div>
-    <div class="row">
+
+    <div id="difficultyArea" class="tic-toolbar hidden">
       <button class="choice" data-difficulty="easy">${t("easy")}</button>
       <button class="choice" data-difficulty="medium">${t("medium")}</button>
       <button class="choice" data-difficulty="hard">${t("hard")}</button>
     </div>
-    <p class="muted" id="ticStatus">${t("chooseMode")}</p>
+
+    <div class="tic-info">
+      <p class="muted" id="ticStatus">${t("chooseMode")}</p>
+      <p class="muted" id="ticBoardInfo"></p>
+    </div>
+
     <div id="ultimateBoard" class="ultimate-board"></div>
   `);
 
+  gameData.mode = null;
+  gameData.difficulty = "medium";
+
   $("solo").onclick = () => {
     gameData.mode = "solo";
-    gameData.difficulty = "medium";
-    startTic();
+    $("difficultyArea").classList.remove("hidden");
+    $("ticStatus").textContent = t("chooseMode");
   };
 
   $("two").onclick = () => {
@@ -406,12 +417,11 @@ function openTic() {
   document.querySelectorAll("[data-difficulty]").forEach(button => {
     button.onclick = () => {
       if (gameData.mode !== "solo") return;
+
       gameData.difficulty = button.dataset.difficulty;
       startTic();
     };
   });
-
-  gameData.mode = null;
 }
 
 function startTic() {
@@ -421,11 +431,14 @@ function startTic() {
   gameData.activeBoard = -1;
   gameData.finished = false;
   gameData.rewarded = false;
+  gameData.lastMove = null;
+
+  $("difficultyArea").classList.add("hidden");
 
   drawTic();
 }
 
-function winner(board) {
+function ticWinner(board) {
   const lines = [
     [0,1,2], [3,4,5], [6,7,8],
     [0,3,6], [1,4,7], [2,5,8],
@@ -433,12 +446,47 @@ function winner(board) {
   ];
 
   for (const [a,b,c] of lines) {
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+    if (
+      (board[a] === "X" || board[a] === "O") &&
+      board[a] === board[b] &&
+      board[b] === board[c]
+    ) {
       return board[a];
     }
   }
 
-  return board.every(Boolean) ? "draw" : "";
+  return "";
+}
+
+function ticBoardResolved(index) {
+  return Boolean(gameData.wonBoards[index]) ||
+    gameData.boards[index].every(Boolean);
+}
+
+function ticOverallWinner() {
+  const result = ticWinner(gameData.wonBoards);
+  if (result) return result;
+
+  const allResolved = gameData.boards.every((board, index) =>
+    ticBoardResolved(index)
+  );
+
+  return allResolved ? "draw" : "";
+}
+
+function getTicAllowedBoards() {
+  if (
+    gameData.activeBoard >= 0 &&
+    !ticBoardResolved(gameData.activeBoard)
+  ) {
+    return [gameData.activeBoard];
+  }
+
+  return gameData.boards
+    .map((board, index) =>
+      ticBoardResolved(index) ? -1 : index
+    )
+    .filter(index => index >= 0);
 }
 
 function drawTic() {
@@ -447,17 +495,22 @@ function drawTic() {
 
   boardElement.innerHTML = "";
 
+  const allowedBoards = getTicAllowedBoards();
+
   gameData.boards.forEach((board, boardIndex) => {
     const small = document.createElement("div");
     small.className = "mini-board";
 
-    if (gameData.activeBoard === -1 || gameData.activeBoard === boardIndex) {
-      if (!gameData.wonBoards[boardIndex] && !gameData.finished) {
-        small.classList.add("active");
-      }
+    if (
+      !gameData.finished &&
+      allowedBoards.includes(boardIndex)
+    ) {
+      small.classList.add("active");
     }
 
-    if (gameData.wonBoards[boardIndex]) small.classList.add("won");
+    if (gameData.wonBoards[boardIndex]) {
+      small.classList.add("won");
+    }
 
     const grid = document.createElement("div");
     grid.className = "mini-grid";
@@ -467,21 +520,40 @@ function drawTic() {
       button.className = "mini-cell";
       button.textContent = value || "";
 
+      if (value) {
+        button.classList.add(value === "X" ? "tic-x" : "tic-o");
+      }
+
+      if (
+        gameData.lastMove &&
+        gameData.lastMove.boardIndex === boardIndex &&
+        gameData.lastMove.cellIndex === cellIndex
+      ) {
+        button.classList.add("last-move");
+      }
+
       const allowed =
         !gameData.finished &&
         !gameData.wonBoards[boardIndex] &&
         !value &&
-        (gameData.activeBoard === -1 || gameData.activeBoard === boardIndex);
+        allowedBoards.includes(boardIndex) &&
+        !(gameData.mode === "solo" && gameData.player === "O");
 
       button.disabled = !allowed;
       button.onclick = () => playTic(boardIndex, cellIndex);
+
       grid.appendChild(button);
     });
 
     if (gameData.wonBoards[boardIndex]) {
       const label = document.createElement("div");
-      label.className = "muted";
+      label.className = "tic-board-winner";
       label.textContent = gameData.wonBoards[boardIndex];
+      small.appendChild(label);
+    } else if (board.every(Boolean)) {
+      const label = document.createElement("div");
+      label.className = "tic-board-winner";
+      label.textContent = "—";
       small.appendChild(label);
     }
 
@@ -490,112 +562,211 @@ function drawTic() {
   });
 
   const status = $("ticStatus");
-  if (status) {
-    if (gameData.finished) {
-      const result = winner(gameData.wonBoards);
-      status.textContent = result === "X" ? t("won") :
-        result === "O" ? t("lost") : t("draw");
-    } else {
-      status.textContent = gameData.player === "X" ? t("yourTurn") :
-        t("aiTurn");
-    }
+  const boardInfo = $("ticBoardInfo");
+
+  if (gameData.finished) {
+    const result = ticOverallWinner();
+
+    status.textContent =
+      result === "X" ? t("won") :
+      result === "O" ? t("lost") :
+      t("draw");
+
+    boardInfo.textContent = t("gameOver");
+  } else {
+    status.textContent =
+      gameData.player === "X" ? t("yourTurn") : t("aiTurn");
+
+    boardInfo.textContent =
+      gameData.activeBoard === -1 ||
+      ticBoardResolved(gameData.activeBoard)
+        ? t("selectCell")
+        : `${t("selectCell")} ${gameData.activeBoard + 1}`;
   }
 }
 
 function playTic(boardIndex, cellIndex) {
   if (gameData.finished) return;
-  if (gameData.wonBoards[boardIndex]) return;
+  if (gameData.mode === "solo" && gameData.player === "O") return;
+  if (ticBoardResolved(boardIndex)) return;
+  if (gameData.activeBoard !== -1 &&
+      !ticBoardResolved(gameData.activeBoard) &&
+      gameData.activeBoard !== boardIndex) return;
+
   if (gameData.boards[boardIndex][cellIndex]) return;
-  if (gameData.activeBoard !== -1 && gameData.activeBoard !== boardIndex) return;
 
-  gameData.boards[boardIndex][cellIndex] = gameData.player;
+  applyTicMove(boardIndex, cellIndex);
 
-  const localWinner = winner(gameData.boards[boardIndex]);
-  if (localWinner) {
-    gameData.wonBoards[boardIndex] = localWinner === "draw" ? "" : localWinner;
+  if (
+    !gameData.finished &&
+    gameData.mode === "solo" &&
+    gameData.player === "O"
+  ) {
+    gameTimer = setTimeout(computerMove, 500);
+  }
+}
+
+function applyTicMove(boardIndex, cellIndex) {
+  const player = gameData.player;
+
+  gameData.boards[boardIndex][cellIndex] = player;
+  gameData.lastMove = { boardIndex, cellIndex };
+
+  const localResult = ticWinner(gameData.boards[boardIndex]);
+
+  if (localResult) {
+    gameData.wonBoards[boardIndex] = localResult;
+  } else if (gameData.boards[boardIndex].every(Boolean)) {
+    gameData.wonBoards[boardIndex] = "D";
   }
 
-  const overallWinner = winner(gameData.wonBoards);
-  if (overallWinner) {
-    finishTic(overallWinner);
+  const overallResult = ticOverallWinner();
+
+  if (overallResult) {
+    finishTic(overallResult);
     return;
   }
 
   const nextBoard = cellIndex;
-  gameData.activeBoard =
-    gameData.wonBoards[nextBoard] ||
-    gameData.boards[nextBoard].every(Boolean) ? -1 : nextBoard;
 
-  gameData.player = gameData.player === "X" ? "O" : "X";
+  gameData.activeBoard = ticBoardResolved(nextBoard)
+    ? -1
+    : nextBoard;
+
+  gameData.player = player === "X" ? "O" : "X";
+
   drawTic();
+}
 
-  if (gameData.mode === "solo" && gameData.player === "O") {
-    gameTimer = setTimeout(computerMove, 450);
+function getWinningCell(board, player) {
+  for (let i = 0; i < 9; i++) {
+    if (board[i]) continue;
+
+    const copy = [...board];
+    copy[i] = player;
+
+    if (ticWinner(copy) === player) {
+      return i;
+    }
   }
+
+  return -1;
 }
 
 function computerMove() {
-  if (gameData.finished || currentGame !== "tic") return;
+  if (
+    gameData.finished ||
+    currentGame !== "tic" ||
+    gameData.player !== "O"
+  ) return;
 
-  const possibleBoards = gameData.activeBoard === -1
-    ? gameData.boards.map((board, index) =>
-        !gameData.wonBoards[index] && !board.every(Boolean) ? index : -1
-      ).filter(index => index >= 0)
-    : [gameData.activeBoard];
-
+  const possibleBoards = getTicAllowedBoards();
   const moves = [];
 
   possibleBoards.forEach(boardIndex => {
     gameData.boards[boardIndex].forEach((value, cellIndex) => {
-      if (!value) moves.push({ boardIndex, cellIndex });
+      if (!value) {
+        moves.push({ boardIndex, cellIndex });
+      }
     });
   });
 
-  if (!moves.length) return;
-
-  let move = moves[Math.floor(Math.random() * moves.length)];
-
-  if (gameData.difficulty === "hard") {
-    move = moves.find(m => m.cellIndex === 4) || move;
-  }
-
-  playComputerMove(move);
-}
-
-function playComputerMove(move) {
-  const { boardIndex, cellIndex } = move;
-  gameData.boards[boardIndex][cellIndex] = "O";
-
-  const localWinner = winner(gameData.boards[boardIndex]);
-  if (localWinner && localWinner !== "draw") {
-    gameData.wonBoards[boardIndex] = "O";
-  }
-
-  const overallWinner = winner(gameData.wonBoards);
-  if (overallWinner) {
-    finishTic(overallWinner);
+  if (!moves.length) {
+    const result = ticOverallWinner();
+    if (result) finishTic(result);
     return;
   }
 
-  const nextBoard = cellIndex;
-  gameData.activeBoard =
-    gameData.wonBoards[nextBoard] ||
-    gameData.boards[nextBoard].every(Boolean) ? -1 : nextBoard;
+  let selectedMove;
 
-  gameData.player = "X";
-  drawTic();
+  if (gameData.difficulty === "easy") {
+    selectedMove = moves[Math.floor(Math.random() * moves.length)];
+  } else {
+    selectedMove = chooseSmartMove(moves, gameData.difficulty);
+  }
+
+  applyTicMove(selectedMove.boardIndex, selectedMove.cellIndex);
+}
+
+function chooseSmartMove(moves, difficulty) {
+  let bestMove = moves[0];
+  let bestScore = -Infinity;
+
+  for (const move of moves) {
+    const board = gameData.boards[move.boardIndex];
+    const copy = [...board];
+
+    copy[move.cellIndex] = "O";
+
+    let score = Math.random() * 2;
+
+    if (ticWinner(copy) === "O") {
+      score += 10000;
+    }
+
+    const opponentThreat = getWinningCell(board, "X");
+
+    if (
+      opponentThreat !== -1 &&
+      opponentThreat === move.cellIndex
+    ) {
+      score += 4000;
+    }
+
+    if (move.cellIndex === 4) score += 35;
+    if ([0,2,6,8].includes(move.cellIndex)) score += 18;
+
+    if (difficulty === "hard") {
+      const nextBoard = gameData.boards[move.cellIndex];
+
+      if (
+        nextBoard &&
+        !ticBoardResolved(move.cellIndex)
+      ) {
+        const oThreat = getWinningCell(nextBoard, "O");
+        const xThreat = getWinningCell(nextBoard, "X");
+
+        if (oThreat !== -1) score += 45;
+        if (xThreat !== -1) score -= 20;
+      }
+
+      const simulatedMeta = [...gameData.wonBoards];
+
+      if (ticWinner(copy) === "O") {
+        simulatedMeta[move.boardIndex] = "O";
+
+        if (ticWinner(simulatedMeta) === "O") {
+          score += 20000;
+        }
+      }
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestMove = move;
+    }
+  }
+
+  return bestMove;
 }
 
 function finishTic(result) {
+  if (gameData.finished) return;
+
   gameData.finished = true;
 
   if (!gameData.rewarded) {
     gameData.rewarded = true;
+
     recordGame(result === "X" ? 1 : 0);
 
     if (result === "X") {
       addReward(20, 30, true);
-    } else if (result === "draw") {
+    } else if (result === "O") {
+      if (gameData.mode === "two") {
+        addReward(10, 15, false);
+      }
+    } else {
       addReward(5, 10, false);
     }
   }
