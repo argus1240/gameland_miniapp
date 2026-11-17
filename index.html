@@ -1,32 +1,76 @@
 <!doctype html>
-<html lang="fa" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>گیم‌لند</title><link rel="stylesheet" href="style.css">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#0b1022">
+  <title>GameVerse</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-<div class="app">
-<header class="top">
-  <div><span class="eyebrow">دنیای بازی‌های کوچک</span><h1>🎮 گیم‌لند</h1></div>
-  <div class="wallet">🪙 <b id="coins">120</b></div>
-</header>
-<section class="profile card">
-  <div class="avatar">👾</div><div class="profile-info"><b id="username">بازیکن گیم‌لند</b><small>سطح <span id="level">1</span> · تجربه <span id="xp">0</span></small><div class="progress"><i id="xpbar"></i></div></div>
-</section>
-<div class="section-head"><div><h2>بازی‌ها</h2><p>یکی رو انتخاب کن و شروع کن!</p></div><span class="pill">7 بازی</span></div>
-<main id="games" class="games">
-  <button class="game-card" data-game="tic"><span class="game-icon">⭕</span><b>دوز</b><small>هوش مصنوعی و دونفره</small></button>
-  <button class="game-card" data-game="puzzle"><span class="game-icon">🧩</span><b>پازل اعداد</b><small>ذهن خودت رو بسنج</small></button>
-  <button class="game-card" data-game="aim"><span class="game-icon">🎯</span><b>هدف‌گیری</b><small>سرعت عمل</small></button>
-  <button class="game-card" data-game="car"><span class="game-icon">🏎️</span><b>ماشین‌بازی</b><small>از موانع دوری کن</small></button>
-  <button class="game-card" data-game="jump"><span class="game-icon">🐸</span><b>پرش</b><small>امتیاز جمع کن</small></button>
-  <button class="game-card" data-game="image"><span class="game-icon">🖼️</span><b>حدس تصویر</b><small>چی می‌بینی؟</small></button>
-  <button class="game-card" data-game="football"><span class="game-icon">⚽</span><b>ضربه پنالتی</b><small>گل بزن!</small></button>
-</main>
-<section class="card stats"><div><b id="wins">0</b><small>بردها</small></div><div><b id="played">0</b><small>بازی‌ها</small></div><div><b id="best">0</b><small>رکورد</small></div></section>
-<nav class="bottom"><span class="active">⌂<small>خانه</small></span><span id="profileTab">♙<small>پروفایل</small></span><span id="helpTab">ⓘ<small>راهنما</small></span></nav>
-</div>
-<div id="modal" class="modal hidden"><div class="dialog"><button class="close" id="close">✕</button><h2 id="gameTitle">بازی</h2><div id="gameArea"></div></div></div>
-<script src="app.js"></script>
-</body></html>
+  <div class="app">
+    <header class="top">
+      <div>
+        <span class="eyebrow" data-i18n="tagline">ENTER THE WORLD OF GAMES</span>
+        <h1>🎮 GameVerse</h1>
+      </div>
+      <div class="header-actions">
+        <select id="language" class="language" aria-label="Language">
+          <option value="en">English</option>
+          <option value="fa">فارسی</option>
+          <option value="ar">العربية</option>
+          <option value="tr">Türkçe</option>
+          <option value="es">Español</option>
+        </select>
+        <div class="wallet">🪙 <b id="coins">120</b></div>
+      </div>
+    </header>
+
+    <section class="profile card">
+      <div class="avatar">👾</div>
+      <div class="profile-info">
+        <b id="username">Player</b>
+        <small><span data-i18n="level">Level</span> <span id="level">1</span> · <span data-i18n="xp">XP</span> <span id="xp">0</span></small>
+        <div class="progress"><i id="xpbar"></i></div>
+      </div>
+    </section>
+
+    <div class="section-head">
+      <div><h2 data-i18n="games">Games</h2><p data-i18n="choose">Choose a game and jump in!</p></div>
+      <span class="pill" id="gameCount">7 games</span>
+    </div>
+
+    <main id="games" class="games">
+      <button class="game-card" data-game="tic"><span class="game-icon">⭕</span><b data-i18n="tic">Tic-Tac-Toe</b><small data-i18n="ticDesc">Play against the computer</small></button>
+      <button class="game-card" data-game="puzzle"><span class="game-icon">🧩</span><b data-i18n="puzzle">Number Puzzle</b><small data-i18n="puzzleDesc">Put the numbers in order</small></button>
+      <button class="game-card" data-game="aim"><span class="game-icon">🎯</span><b data-i18n="aim">Target Rush</b><small data-i18n="aimDesc">Test your reaction</small></button>
+      <button class="game-card" data-game="car"><span class="game-icon">🏎️</span><b data-i18n="car">Lane Dodge</b><small data-i18n="carDesc">Avoid the obstacles</small></button>
+      <button class="game-card" data-game="jump"><span class="game-icon">🐸</span><b data-i18n="jump">Jump Challenge</b><small data-i18n="jumpDesc">Reach ten jumps</small></button>
+      <button class="game-card" data-game="image"><span class="game-icon">🖼️</span><b data-i18n="image">Picture Quiz</b><small data-i18n="imageDesc">Guess the picture</small></button>
+      <button class="game-card" data-game="football"><span class="game-icon">⚽</span><b data-i18n="football">Penalty Kick</b><small data-i18n="footballDesc">Can you score?</small></button>
+    </main>
+
+    <section class="card stats">
+      <div><b id="wins">0</b><small data-i18n="wins">Wins</small></div>
+      <div><b id="played">0</b><small data-i18n="played">Games played</small></div>
+      <div><b id="best">0</b><small data-i18n="best">Best score</small></div>
+    </section>
+
+    <nav class="bottom">
+      <button class="active" id="homeTab">⌂<small data-i18n="home">Home</small></button>
+      <button id="profileTab">♙<small data-i18n="profile">Profile</small></button>
+      <button id="helpTab">ⓘ<small data-i18n="help">Help</small></button>
+    </nav>
+  </div>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="dialog">
+      <button class="close" id="close" aria-label="Close">✕</button>
+      <h2 id="gameTitle">Game</h2>
+      <div id="gameArea"></div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
