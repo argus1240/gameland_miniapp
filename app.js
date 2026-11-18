@@ -942,43 +942,164 @@ function finishTicMatch() {
 }
 
 
+
+function puzzleText(en, fa, ar, tr, es) {
+  const lang = localStorage.getItem("gvLang") || "en";
+  return ({ en, fa, ar, tr, es })[lang] || en;
+}
+
+function getPuzzleBest() {
+  try {
+    return JSON.parse(localStorage.getItem("gvPuzzleBest")) || {
+      easy: null,
+      medium: null,
+      hard: null
+    };
+  } catch {
+    return { easy: null, medium: null, hard: null };
+  }
+}
+
+function savePuzzleBest(best) {
+  localStorage.setItem("gvPuzzleBest", JSON.stringify(best));
+}
+
 function openPuzzle() {
+  if (gameTimer) clearInterval(gameTimer);
+
   showGame(t("puzzle"), `
     <p class="muted">${t("puzzleInfo")}</p>
-    <div class="row">
+
+    <div class="row" style="justify-content:space-between; flex-wrap:wrap;">
+      <label>
+        ${puzzleText("Difficulty", "سختی", "الصعوبة", "Zorluk", "Dificultad")}
+        <select id="puzzleDifficulty" class="action">
+          <option value="easy">${puzzleText("Easy", "آسان", "سهل", "Kolay", "Fácil")}</option>
+          <option value="medium">${puzzleText("Medium", "متوسط", "متوسط", "Orta", "Media")}</option>
+          <option value="hard">${puzzleText("Hard", "سخت", "صعب", "Zor", "Difícil")}</option>
+        </select>
+      </label>
       <span>${t("moves")}: <b id="puzzleMoves">0</b></span>
+      <span>${puzzleText("Time", "زمان", "الوقت", "Süre", "Tiempo")}: <b id="puzzleTime">00:00</b></span>
     </div>
+
+    <p class="muted" id="puzzleBest"></p>
+
     <div id="numberGrid" class="number-grid"></div>
-    <div class="row">
+
+    <div class="row" style="flex-wrap:wrap;">
       <button class="action" id="shufflePuzzle">${t("shuffle")}</button>
+      <button class="action" id="restartPuzzle">
+        ${puzzleText("Restart", "شروع دوباره", "إعادة", "Yeniden başlat", "Reiniciar")}
+      </button>
     </div>
+
     <p class="muted" id="puzzleStatus"></p>
   `);
 
+  gameData.puzzleDifficulty = "easy";
+  startPuzzle();
+
+  $("puzzleDifficulty").onchange = () => {
+    gameData.puzzleDifficulty = $("puzzleDifficulty").value;
+    startPuzzle();
+  };
+
+  $("shufflePuzzle").onclick = startPuzzle;
+  $("restartPuzzle").onclick = startPuzzle;
+}
+
+function startPuzzle() {
+  if (gameTimer) clearInterval(gameTimer);
+
   gameData.moves = 0;
-  gameData.tiles = [1,2,3,4,5,6,7,8,0];
+  gameData.puzzleStartedAt = null;
+  gameData.puzzleFinished = false;
+  gameData.puzzleSeconds = 0;
+
+  $("puzzleStatus").textContent = "";
+  $("puzzleTime").textContent = "00:00";
+
+  updatePuzzleBest();
   shufflePuzzle();
   renderPuzzle();
+}
 
-  $("shufflePuzzle").onclick = () => {
-    gameData.moves = 0;
-    shufflePuzzle();
-    renderPuzzle();
-  };
+function updatePuzzleBest() {
+  const best = getPuzzleBest();
+  const difficulty = gameData.puzzleDifficulty || "easy";
+  const value = best[difficulty];
+
+  $("puzzleBest").textContent = value
+    ? `${puzzleText("Best", "بهترین رکورد", "أفضل نتيجة", "En iyi", "Récord")}: ${value.moves} ${t("moves")} · ${formatPuzzleTime(value.seconds)}`
+    : puzzleText(
+        "No record yet",
+        "هنوز رکوردی ثبت نشده",
+        "لا يوجد سجل بعد",
+        "Henüz rekor yok",
+        "Aún no hay récord"
+      );
+}
+
+function formatPuzzleTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
+
+function startPuzzleTimer() {
+  if (gameData.puzzleStartedAt || gameData.puzzleFinished) return;
+
+  gameData.puzzleStartedAt = Date.now();
+
+  gameTimer = setInterval(() => {
+    if (gameData.puzzleFinished) {
+      clearInterval(gameTimer);
+      return;
+    }
+
+    gameData.puzzleSeconds = Math.floor(
+      (Date.now() - gameData.puzzleStartedAt) / 1000
+    );
+
+    const timer = $("puzzleTime");
+    if (timer) timer.textContent = formatPuzzleTime(gameData.puzzleSeconds);
+  }, 1000);
 }
 
 function shufflePuzzle() {
+  const difficulty = gameData.puzzleDifficulty || "easy";
+
+  const shuffleSteps = {
+    easy: 15,
+    medium: 40,
+    hard: 85
+  };
+
   gameData.tiles = [1,2,3,4,5,6,7,8,0];
 
-  for (let i = gameData.tiles.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [gameData.tiles[i], gameData.tiles[j]] =
-      [gameData.tiles[j], gameData.tiles[i]];
-  }
+  let previousEmpty = -1;
 
-  if (!isSolvable(gameData.tiles) || gameData.tiles.every((v, i) => v === (i + 1) % 9)) {
-    gameData.tiles = [1,2,3,4,5,6,7,8,0];
-    [gameData.tiles[7], gameData.tiles[8]] = [0,8];
+  for (let step = 0; step < shuffleSteps[difficulty]; step++) {
+    const empty = gameData.tiles.indexOf(0);
+    const possible = [];
+
+    for (let i = 0; i < 9; i++) {
+      const distance =
+        Math.abs(Math.floor(i / 3) - Math.floor(empty / 3)) +
+        Math.abs(i % 3 - empty % 3);
+
+      if (distance === 1 && i !== previousEmpty) {
+        possible.push(i);
+      }
+    }
+
+    const chosen = possible[Math.floor(Math.random() * possible.length)];
+
+    [gameData.tiles[chosen], gameData.tiles[empty]] =
+      [gameData.tiles[empty], gameData.tiles[chosen]];
+
+    previousEmpty = empty;
   }
 }
 
@@ -1003,10 +1124,12 @@ function renderPuzzle() {
   gameData.tiles.forEach((number, index) => {
     const button = document.createElement("button");
     button.textContent = number || "";
+
     if (!number) button.classList.add("empty");
 
-    button.disabled = !number;
+    button.disabled = !number || gameData.puzzleFinished;
     button.onclick = () => movePuzzle(index);
+
     grid.appendChild(button);
   });
 
@@ -1014,11 +1137,17 @@ function renderPuzzle() {
 }
 
 function movePuzzle(index) {
+  if (gameData.puzzleFinished) return;
+
   const empty = gameData.tiles.indexOf(0);
-  const distance = Math.abs(Math.floor(index / 3) - Math.floor(empty / 3)) +
+
+  const distance =
+    Math.abs(Math.floor(index / 3) - Math.floor(empty / 3)) +
     Math.abs(index % 3 - empty % 3);
 
   if (distance !== 1) return;
+
+  startPuzzleTimer();
 
   [gameData.tiles[index], gameData.tiles[empty]] =
     [gameData.tiles[empty], gameData.tiles[index]];
@@ -1026,15 +1155,78 @@ function movePuzzle(index) {
   gameData.moves++;
   renderPuzzle();
 
-  if (gameData.tiles.every((value, i) => value === (i + 1) % 9)) {
-    $("puzzleStatus").textContent = t("congratulations");
-    addReward(15, 20, true);
-    recordGame(Math.max(0, 100 - gameData.moves));
-    document.querySelectorAll("#numberGrid button").forEach(button => {
-      button.disabled = true;
-    });
-  }
+  const solved = gameData.tiles.every(
+    (value, i) => value === (i + 1) % 9
+  );
+
+  if (solved) finishPuzzle();
 }
+
+function finishPuzzle() {
+  if (gameData.puzzleFinished) return;
+
+  gameData.puzzleFinished = true;
+
+  if (gameTimer) clearInterval(gameTimer);
+
+  const seconds = gameData.puzzleStartedAt
+    ? Math.floor((Date.now() - gameData.puzzleStartedAt) / 1000)
+    : 0;
+
+  gameData.puzzleSeconds = seconds;
+
+  const difficulty = gameData.puzzleDifficulty;
+  const best = getPuzzleBest();
+  const previous = best[difficulty];
+
+  const isNewRecord =
+    !previous ||
+    seconds < previous.seconds ||
+    (seconds === previous.seconds && gameData.moves < previous.moves);
+
+  if (isNewRecord) {
+    best[difficulty] = {
+      seconds,
+      moves: gameData.moves
+    };
+
+    savePuzzleBest(best);
+  }
+
+  const rewards = {
+    easy: [15, 20],
+    medium: [25, 35],
+    hard: [40, 50]
+  };
+
+  const [coins, xp] = rewards[difficulty];
+
+  addReward(coins, xp, true);
+
+  const score = Math.max(
+    0,
+    100 - gameData.moves + (difficulty === "hard" ? 50 : difficulty === "medium" ? 25 : 0)
+  );
+
+  recordGame(score);
+
+  $("puzzleStatus").textContent =
+    puzzleText(
+      "Puzzle completed!",
+      "پازل رو حل کردی!",
+      "تم حل اللغز!",
+      "Bulmacayı çözdün!",
+      "¡Puzzle completado!"
+    ) +
+    ` ${formatPuzzleTime(seconds)} · ${gameData.moves} ${t("moves")}` +
+    (isNewRecord
+      ? " 🏆 " + puzzleText("New record!", "رکورد جدید!", "رقم قياسي جديد!", "Yeni rekor!", "¡Nuevo récord!")
+      : "");
+
+  updatePuzzleBest();
+  renderPuzzle();
+}
+
 
 function openAim() {
   showGame(t("aim"), `
