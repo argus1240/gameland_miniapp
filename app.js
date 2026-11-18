@@ -1,11 +1,10 @@
-
 const translations = {
   en: {
     tagline: "ENTER THE WORLD OF GAMES", language: "Language",
     level: "Level", xp: "XP", games: "Games",
     choose: "Choose a game and jump in!", gameCount: "7 games",
     tic: "Ultimate Tic-Tac-Toe", ticSub: "Solo AI or two players",
-    puzzle: "Number Puzzle", puzzleSub: "Put the numbers in order",
+    puzzle: "Puzzle Zone", puzzleSub: "Three magical puzzle games",
     aim: "Target Rush", aimSub: "Test your reaction",
     car: "Quick Racer", carSub: "Complete 10 moves",
     jump: "Jump Challenge", jumpSub: "Reach the finish line",
@@ -50,7 +49,7 @@ const translations = {
     level: "سطح", xp: "تجربه", games: "بازی‌ها",
     choose: "یک بازی انتخاب کن و شروع کن!", gameCount: "۷ بازی",
     tic: "دوز حرفه‌ای", ticSub: "بازی با هوش مصنوعی یا دو نفره",
-    puzzle: "پازل اعداد", puzzleSub: "اعداد را مرتب کن",
+    puzzle: "دنیای پازل", puzzleSub: "سه بازی جذاب فکری",
     aim: "هدف‌گیری سریع", aimSub: "سرعت واکنشت را بسنج",
     car: "مسابقه سریع", carSub: "۱۰ حرکت انجام بده",
     jump: "چالش پرش", jumpSub: "به خط پایان برس",
@@ -95,7 +94,7 @@ const translations = {
     level: "المستوى", xp: "الخبرة", games: "الألعاب",
     choose: "اختر لعبة وابدأ!", gameCount: "٧ ألعاب",
     tic: "إكس أو المتقدمة", ticSub: "ضد الكمبيوتر أو لاعبان",
-    puzzle: "لغز الأرقام", puzzleSub: "رتب الأرقام",
+    puzzle: "عالم الألغاز", puzzleSub: "ثلاث ألعاب ذهنية",
     aim: "اختبار الهدف", aimSub: "اختبر سرعة رد فعلك",
     car: "سباق سريع", carSub: "أكمل ١٠ حركات",
     jump: "تحدي القفز", jumpSub: "وصل إلى خط النهاية",
@@ -139,7 +138,7 @@ const translations = {
     level: "Seviye", xp: "XP", games: "Oyunlar",
     choose: "Bir oyun seç ve başla!", gameCount: "7 oyun",
     tic: "Gelişmiş XOX", ticSub: "Bilgisayara karşı veya iki kişi",
-    puzzle: "Sayı Bulmacası", puzzleSub: "Sayıları sırala",
+    puzzle: "Bulmaca Dünyası", puzzleSub: "3 eğlenceli bulmaca",
     aim: "Hedef Yarışı", aimSub: "Tepki hızını dene",
     car: "Hızlı Yarış", carSub: "10 hamle tamamla",
     jump: "Zıplama Mücadelesi", jumpSub: "Bitiş çizgisine ulaş",
@@ -183,7 +182,7 @@ const translations = {
     level: "Nivel", xp: "XP", games: "Juegos",
     choose: "¡Elige un juego y comienza!", gameCount: "7 juegos",
     tic: "Tres en Raya Ultimate", ticSub: "Contra IA o dos jugadores",
-    puzzle: "Rompecabezas numérico", puzzleSub: "Ordena los números",
+    puzzle: "Zona de Puzzles", puzzleSub: "3 juegos de ingenio",
     aim: "Reto de puntería", aimSub: "Pon a prueba tus reflejos",
     car: "Carrera rápida", carSub: "Completa 10 movimientos",
     jump: "Reto de salto", jumpSub: "Llega a la meta",
@@ -227,6 +226,7 @@ let currentLang = "en";
 let currentGame = null;
 let gameTimer = null;
 let gameData = {};
+
 let data = {
   coins: 120,
   xp: 0,
@@ -263,7 +263,7 @@ function saveData() {
   try {
     localStorage.setItem("glData", JSON.stringify(data));
   } catch (error) {
-    console.warn("Could not save game data:", error);
+    console.warn("Could not save saved game data:", error);
   }
 }
 
@@ -277,11 +277,13 @@ function saveLanguage() {
 
 function applyLanguage() {
   const rtl = currentLang === "fa" || currentLang === "ar";
+
   document.documentElement.lang = currentLang;
   document.documentElement.dir = rtl ? "rtl" : "ltr";
 
   document.querySelectorAll("[data-i18n]").forEach(element => {
     const key = element.dataset.i18n;
+
     if (translations[currentLang][key]) {
       element.textContent = translations[currentLang][key];
     }
@@ -293,6 +295,7 @@ function applyLanguage() {
 
 function setLanguage(lang) {
   if (!translations[lang]) return;
+
   currentLang = lang;
   saveLanguage();
   applyLanguage();
@@ -316,13 +319,16 @@ function updateUI() {
 
   const tg = window.Telegram?.WebApp;
   const name = tg?.initDataUnsafe?.user?.first_name;
+
   $("username").textContent = name || "Player";
 }
 
 function addReward(coins, xp, won = false) {
   data.coins += coins;
   data.xp += xp;
+
   if (won) data.wins++;
+
   saveData();
   updateUI();
 }
@@ -330,6 +336,7 @@ function addReward(coins, xp, won = false) {
 function recordGame(score = 0) {
   data.played++;
   data.best = Math.max(data.best, score);
+
   saveData();
   updateUI();
 }
@@ -342,6 +349,7 @@ function closeGame() {
 
   gameTimer = null;
   currentGame = null;
+
   $("modal").classList.add("hidden");
   $("gameArea").innerHTML = "";
 }
@@ -357,16 +365,6 @@ function openGame(game) {
   currentGame = game;
   gameData = {};
 
-  const names = {
-    tic: "tic",
-    puzzle: "puzzle",
-    aim: "aim",
-    car: "car",
-    jump: "jump",
-    image: "image",
-    football: "football"
-  };
-
   if (game === "tic") return openTic();
   if (game === "puzzle") return openPuzzle();
   if (game === "aim") return openAim();
@@ -375,8 +373,6 @@ function openGame(game) {
   if (game === "image") return openImageQuiz();
   if (game === "football") return openFootball();
 }
-
-
 
 function getTicStats() {
   const defaults = {
@@ -399,9 +395,12 @@ function getTicStats() {
 }
 
 function saveTicStats(stats) {
-  localStorage.setItem("gvTicStats", JSON.stringify(stats));
+  try {
+    localStorage.setItem("gvTicStats", JSON.stringify(stats));
+  } catch (error) {
+    console.warn("Could not save Tic-Tac-Toe statistics:", error);
+  }
 }
-
 function openTic() {
   showGame(t("tic"), `
     <p class="muted">${t("nineBoards")}</p>
@@ -425,13 +424,11 @@ function openTic() {
     </div>
 
     <div id="ultimateBoard" class="ultimate-board"></div>
-
     <div class="tic-toolbar" id="ticMatchActions"></div>
   `);
 
   gameData.mode = null;
   gameData.difficulty = "medium";
-
   gameData.ticMatch = {
     xWins: 0,
     oWins: 0,
@@ -492,6 +489,7 @@ function startTic() {
   gameData.lastMove = null;
 
   clearTimeout(gameTimer);
+  gameTimer = null;
 
   $("difficultyArea").classList.add("hidden");
   $("ticMatchActions").innerHTML = "";
@@ -502,12 +500,12 @@ function startTic() {
 
 function ticWinner(board) {
   const lines = [
-    [0,1,2], [3,4,5], [6,7,8],
-    [0,3,6], [1,4,7], [2,5,8],
-    [0,4,8], [2,4,6]
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
   ];
 
-  for (const [a,b,c] of lines) {
+  for (const [a, b, c] of lines) {
     if (
       (board[a] === "X" || board[a] === "O") &&
       board[a] === board[b] &&
@@ -631,14 +629,28 @@ function drawTic() {
   const boardInfo = $("ticBoardInfo");
 
   if (gameData.finished) {
-    const result = ticOverallWinner();
+    const match = gameData.ticMatch;
 
-    status.textContent =
-      result === "X" ? t("won") :
-      result === "O" ? t("lost") :
-      t("draw");
+    if (match?.completed) {
+      status.textContent =
+        match.xWins > match.oWins
+          ? "🏆 YOU WON THE MATCH!"
+          : match.oWins > match.xWins
+            ? "💔 MATCH LOST!"
+            : "🤝 MATCH DRAW!";
 
-    boardInfo.textContent = t("gameOver");
+      boardInfo.textContent =
+        `Final Score: X ${match.xWins} - O ${match.oWins}`;
+    } else {
+      const result = ticOverallWinner();
+
+      status.textContent =
+        result === "X" ? t("won") :
+        result === "O" ? t("lost") :
+        t("draw");
+
+      boardInfo.textContent = t("gameOver");
+    }
   } else {
     status.textContent =
       gameData.player === "X" ? t("yourTurn") : t("aiTurn");
@@ -679,7 +691,6 @@ function playTic(boardIndex, cellIndex) {
 
 function applyTicMove(boardIndex, cellIndex) {
   const player = gameData.player;
-
   gameData.boards[boardIndex][cellIndex] = player;
   gameData.lastMove = { boardIndex, cellIndex };
 
@@ -699,7 +710,6 @@ function applyTicMove(boardIndex, cellIndex) {
   }
 
   const nextBoard = cellIndex;
-
   gameData.activeBoard = ticBoardResolved(nextBoard)
     ? -1
     : nextBoard;
@@ -768,7 +778,6 @@ function chooseSmartMove(moves, difficulty) {
     const copy = [...board];
 
     copy[move.cellIndex] = "O";
-
     let score = Math.random() * 2;
 
     if (ticWinner(copy) === "O") {
@@ -785,7 +794,7 @@ function chooseSmartMove(moves, difficulty) {
     }
 
     if (move.cellIndex === 4) score += 35;
-    if ([0,2,6,8].includes(move.cellIndex)) score += 18;
+    if ([0, 2, 6, 8].includes(move.cellIndex)) score += 18;
 
     if (difficulty === "hard") {
       const nextBoard = gameData.boards[move.cellIndex];
@@ -878,14 +887,12 @@ function finishTic(result) {
 
 function finishTicMatch() {
   const match = gameData.ticMatch;
-
   if (match.completed) return;
+
   match.completed = true;
 
   const stats = getTicStats();
   stats.matches++;
-
-  let message;
 
   if (match.xWins > match.oWins) {
     stats.championships++;
@@ -894,28 +901,16 @@ function finishTicMatch() {
       stats.bestStreak,
       stats.currentStreak
     );
-    message = "🏆 YOU WON THE MATCH!";
   } else if (match.oWins > match.xWins) {
     stats.losses++;
     stats.currentStreak = 0;
-    message = "💔 MATCH LOST!";
   } else {
     stats.draws++;
     stats.currentStreak = 0;
-    message = "🤝 MATCH DRAW!";
   }
 
   saveTicStats(stats);
   updateTicStatsDisplay();
-
-  const status = $("ticStatus");
-  if (status) status.textContent = message;
-
-  const info = $("ticBoardInfo");
-  if (info) {
-    info.textContent =
-      `Final Score: X ${match.xWins} - O ${match.oWins}`;
-  }
 
   const actions = $("ticMatchActions");
 
@@ -940,13 +935,9 @@ function finishTicMatch() {
     actions.appendChild(again);
   }
 }
-
-
-
-
 /* =========================
    GAMEVERSE - PUZZLE ZONE
-   3000 Match-3 stages + Picture Puzzle + 2048
+   Match-3 + Picture Puzzle + 2048
 ========================= */
 
 const PZ_CHAPTERS = [
@@ -967,7 +958,11 @@ function pzLoad() {
 }
 
 function pzSave(state) {
-  localStorage.setItem(PZ_STORAGE, JSON.stringify(state));
+  try {
+    localStorage.setItem(PZ_STORAGE, JSON.stringify(state));
+  } catch (error) {
+    console.warn("Could not save Puzzle Zone progress:", error);
+  }
 }
 
 function pzText(en, fa, ar, tr, es) {
@@ -977,6 +972,7 @@ function pzText(en, fa, ar, tr, es) {
 
 function pzState() {
   const saved = pzLoad();
+
   return {
     unlocked: Math.max(1, Number(saved.unlocked) || 1),
     stars: saved.stars || {},
@@ -1000,6 +996,7 @@ function pzChapterName(chapter) {
     ["Emerald Caves", "غارهای زمردی", "كهوف الزمرد", "Zümrüt Mağaraları", "Cuevas Esmeralda"],
     ["Phoenix Lands", "سرزمین ققنوس", "أرض العنقاء", "Anka Diyarı", "Tierras del Fénix"]
   ];
+
   return names[chapter % names.length][
     ["en", "fa", "ar", "tr", "es"].indexOf(currentLang)
   ] || names[chapter % names.length][0];
@@ -1102,12 +1099,14 @@ function pzMap() {
         <button class="action" id="pzBackHome">← ${pzText("Games", "بازی‌ها", "الألعاب", "Oyunlar", "Juegos")}</button>
         <span>💎 ${state.coins}</span>
       </div>
+
       <div class="pz-chapter-banner">
         <small>CHAPTER ${currentChapter + 1} / 60</small>
         <h2>${pzChapterName(currentChapter)}</h2>
         <p>${pzText("Choose your next challenge", "مرحله بعدی را انتخاب کن", "اختر التحدي التالي", "Sonraki mücadeleyi seç", "Elige tu próximo desafío")}</p>
         <div class="pz-chapter-progress">${state.unlocked} / 3000</div>
       </div>
+
       <div class="pz-stage-grid">${stageButtons}</div>
     `
   );
@@ -1153,11 +1152,17 @@ function pzFindMatches(board) {
     let count = 1;
 
     for (let c = 1; c <= 8; c++) {
-      if (c < 8 && board[r][c] !== null && board[r][c] === board[r][c - 1]) {
+      if (
+        c < 8 &&
+        board[r][c] !== null &&
+        board[r][c] === board[r][c - 1]
+      ) {
         count++;
       } else {
         if (count >= 3) {
-          for (let k = c - count; k < c; k++) found.add(`${r},${k}`);
+          for (let k = c - count; k < c; k++) {
+            found.add(`${r},${k}`);
+          }
         }
         count = 1;
       }
@@ -1168,11 +1173,17 @@ function pzFindMatches(board) {
     let count = 1;
 
     for (let r = 1; r <= 8; r++) {
-      if (r < 8 && board[r][c] !== null && board[r][c] === board[r - 1][c]) {
+      if (
+        r < 8 &&
+        board[r][c] !== null &&
+        board[r][c] === board[r - 1][c]
+      ) {
         count++;
       } else {
         if (count >= 3) {
-          for (let k = r - count; k < r; k++) found.add(`${k},${c}`);
+          for (let k = r - count; k < r; k++) {
+            found.add(`${k},${c}`);
+          }
         }
         count = 1;
       }
@@ -1215,7 +1226,14 @@ function pzDrawMatch() {
       </div>
 
       <div class="pz-board" id="pzBoard"></div>
-      <p class="pz-hint" id="pzHint">${pzText("Swap two neighboring gems to match 3 or more.", "دو کریستال کنار هم را جابه‌جا کن تا سه‌تایی بسازی.", "بدّل جوهرتين متجاورتين لمطابقة ثلاثة.", "Üçlü eşleşme için komşu taşları değiştir.", "Intercambia gemas vecinas para juntar tres.")}</p>
+
+      <p class="pz-hint" id="pzHint">${pzText(
+        "Swap two neighboring gems to match 3 or more.",
+        "دو کریستال کنار هم را جابه‌جا کن تا سه‌تایی بسازی.",
+        "بدّل جوهرتين متجاورتين لمطابقة ثلاثة.",
+        "Üçlü eşleşme için komşu taşları değiştir.",
+        "Intercambia gemas vecinas para juntar tres."
+      )}</p>
     `
   );
 
@@ -1239,10 +1257,13 @@ function pzRenderBoard() {
         gameData.pzSelected &&
         gameData.pzSelected.r === r &&
         gameData.pzSelected.c === c
-      ) button.classList.add("selected");
+      ) {
+        button.classList.add("selected");
+      }
 
       button.disabled = gameData.pzBusy || gameData.pzFinished;
       button.onclick = () => pzSelectGem(r, c);
+
       element.appendChild(button);
     });
   });
@@ -1268,6 +1289,7 @@ function pzSelectGem(r, c) {
 
   const board = gameData.pzBoard;
   const temp = board[first.r][first.c];
+
   board[first.r][first.c] = board[r][c];
   board[r][c] = temp;
   gameData.pzSelected = null;
@@ -1300,6 +1322,7 @@ function pzResolveMatches() {
     } else if (gameData.pzMoves <= 0) {
       pzFinishMatch(false);
     }
+
     return;
   }
 
@@ -1319,7 +1342,8 @@ function pzResolveMatches() {
     }
 
     for (let r = 7; r >= 0; r--) {
-      gameData.pzBoard[r][c] = remaining[7 - r] ??
+      gameData.pzBoard[r][c] =
+        remaining[7 - r] ??
         Math.floor(Math.random() * PZ_GEMS.length);
     }
   }
@@ -1327,18 +1351,20 @@ function pzResolveMatches() {
   pzRenderBoard();
   pzUpdateMatchStats();
 
-  setTimeout(pzResolveMatches, 180);
+  gameTimer = setTimeout(pzResolveMatches, 180);
 }
 
 function pzUpdateMatchStats() {
   const score = $("pzScore");
   const moves = $("pzMoves");
+
   if (score) score.textContent = gameData.pzScore;
   if (moves) moves.textContent = gameData.pzMoves;
 }
 
 function pzFinishMatch(won) {
   if (gameData.pzFinished) return;
+
   gameData.pzFinished = true;
   gameData.pzBusy = true;
 
@@ -1346,11 +1372,20 @@ function pzFinishMatch(won) {
   const state = pzState();
 
   if (won) {
-    const stars = gameData.pzScore >= pzLevelGoal(stage) * 1.8 ? 3 :
+    const stars =
+      gameData.pzScore >= pzLevelGoal(stage) * 1.8 ? 3 :
       gameData.pzScore >= pzLevelGoal(stage) * 1.35 ? 2 : 1;
 
-    state.stars[stage] = Math.max(Number(state.stars[stage]) || 0, stars);
-    state.unlocked = Math.max(state.unlocked, Math.min(3000, stage + 1));
+    state.stars[stage] = Math.max(
+      Number(state.stars[stage]) || 0,
+      stars
+    );
+
+    state.unlocked = Math.max(
+      state.unlocked,
+      Math.min(3000, stage + 1)
+    );
+
     state.coins += 10 + stars * 5;
     pzSave(state);
 
@@ -1366,24 +1401,29 @@ function pzFinishMatch(won) {
   if (element) element.textContent = message;
 
   const board = $("pzBoard");
-  if (board) board.innerHTML = `
-    <div class="pz-result">
-      <div>${won ? "🏆" : "💫"}</div>
-      <h2>${won ? "LEVEL COMPLETE" : "TRY AGAIN"}</h2>
-      <p>${won ? "⭐".repeat(Number(state.stars[stage]) || 1) : ""}</p>
-      <button class="action" id="pzContinue">${won ? "Next Level ➜" : "Retry ↻"}</button>
-      <button class="action" id="pzStageMap">Adventure Map</button>
-    </div>
-  `;
+
+  if (board) {
+    board.innerHTML = `
+      <div class="pz-result">
+        <div>${won ? "🏆" : "💫"}</div>
+        <h2>${won ? "LEVEL COMPLETE" : "TRY AGAIN"}</h2>
+        <p>${won ? "⭐".repeat(Number(state.stars[stage]) || 1) : ""}</p>
+        <button class="action" id="pzContinue">${won ? "Next Level ➜" : "Retry ↻"}</button>
+        <button class="action" id="pzStageMap">Adventure Map</button>
+      </div>
+    `;
+  }
 
   $("pzContinue").onclick = () => {
-    if (won && stage < 3000) pzStartMatch(stage + 1);
-    else pzStartMatch(stage);
+    if (won && stage < 3000) {
+      pzStartMatch(stage + 1);
+    } else {
+      pzStartMatch(stage);
+    }
   };
 
   $("pzStageMap").onclick = pzMap;
 }
-
 /* ---------- PICTURE PUZZLE ---------- */
 
 const PZ_PICTURES = ["🌈", "🏰", "🐉", "🦄", "🌋", "🌌", "🧚", "🐬", "🌳"];
@@ -1391,19 +1431,22 @@ const PZ_PICTURES = ["🌈", "🏰", "🐉", "🦄", "🌋", "🌌", "🧚", "�
 function pzOpenPicture() {
   gameData.picMoves = 0;
   gameData.picSolved = false;
-  gameData.picTiles = [1,2,3,4,5,6,7,8,0];
+  gameData.picTiles = [1, 2, 3, 4, 5, 6, 7, 8, 0];
 
   for (let i = 0; i < 100; i++) {
     const empty = gameData.picTiles.indexOf(0);
     const options = [];
 
     for (let j = 0; j < 9; j++) {
-      const distance = Math.abs(Math.floor(j / 3) - Math.floor(empty / 3)) +
+      const distance =
+        Math.abs(Math.floor(j / 3) - Math.floor(empty / 3)) +
         Math.abs(j % 3 - empty % 3);
+
       if (distance === 1) options.push(j);
     }
 
     const chosen = options[Math.floor(Math.random() * options.length)];
+
     [gameData.picTiles[empty], gameData.picTiles[chosen]] =
       [gameData.picTiles[chosen], gameData.picTiles[empty]];
   }
@@ -1415,17 +1458,34 @@ function pzDrawPicture() {
   showGame(
     "🖼️ Picture Puzzle",
     `
-      <p class="muted">${pzText("Put the picture tiles in the correct order.", "قطعات تصویر را به ترتیب درست بچین.", "رتب قطع الصورة بشكل صحيح.", "Resim parçalarını doğru sıraya koy.", "Ordena las piezas de la imagen.")}</p>
-      <div class="pz-picture-preview">${PZ_PICTURES[gameData.picTiles[0] ? gameData.picTiles[0] - 1 : 0]}</div>
-      <p class="pz-picture-stats">${pzText("Moves", "حرکت‌ها", "الحركات", "Hamle", "Movimientos")}: <b id="pzPicMoves">${gameData.picMoves}</b></p>
+      <p class="muted">${pzText(
+        "Put the picture tiles in the correct order.",
+        "قطعات تصویر را به ترتیب درست بچین.",
+        "رتب قطع الصورة بشكل صحيح.",
+        "Resim parçalarını doğru sıraya koy.",
+        "Ordena las piezas de la imagen."
+      )}</p>
+
+      <div class="pz-picture-preview">${PZ_PICTURES[0]}</div>
+
+      <p class="pz-picture-stats">
+        ${pzText("Moves", "حرکت‌ها", "الحركات", "Hamle", "Movimientos")}:
+        <b id="pzPicMoves">${gameData.picMoves}</b>
+      </p>
+
       <div class="pz-picture-grid" id="pzPictureGrid"></div>
-      <button class="action" id="pzPicNew">${pzText("New puzzle", "پازل جدید", "لغز جديد", "Yeni bulmaca", "Nuevo puzzle")}</button>
+
+      <button class="action" id="pzPicNew">
+        ${pzText("New puzzle", "پازل جدید", "لغز جديد", "Yeni bulmaca", "Nuevo puzzle")}
+      </button>
+
       <button class="action" id="pzPicBack">← Puzzle Zone</button>
       <p class="muted" id="pzPicStatus"></p>
     `
   );
 
   const grid = $("pzPictureGrid");
+
   gameData.picTiles.forEach((value, index) => {
     const button = document.createElement("button");
     button.className = "pz-picture-tile";
@@ -1443,7 +1503,9 @@ function pzPictureMove(index) {
   if (gameData.picSolved) return;
 
   const empty = gameData.picTiles.indexOf(0);
-  const distance = Math.abs(Math.floor(index / 3) - Math.floor(empty / 3)) +
+
+  const distance =
+    Math.abs(Math.floor(index / 3) - Math.floor(empty / 3)) +
     Math.abs(index % 3 - empty % 3);
 
   if (distance !== 1) return;
@@ -1459,8 +1521,14 @@ function pzPictureMove(index) {
 
   if (solved) {
     gameData.picSolved = true;
+
     addReward(12, 20, true);
     recordGame(Math.max(0, 100 - gameData.picMoves));
+  }
+
+  pzDrawPicture();
+
+  if (solved) {
     $("pzPicStatus").textContent = "🏆 " + pzText(
       "Picture completed!",
       "تصویر کامل شد!",
@@ -1469,14 +1537,16 @@ function pzPictureMove(index) {
       "¡Imagen completada!"
     );
   }
-
-  pzDrawPicture();
 }
 
 /* ---------- 2048 ---------- */
 
 function pzOpen2048() {
-  gameData.pz2048 = Array.from({ length: 4 }, () => Array(4).fill(0));
+  gameData.pz2048 = Array.from(
+    { length: 4 },
+    () => Array(4).fill(0)
+  );
+
   gameData.pz2048Score = 0;
   gameData.pz2048Over = false;
 
@@ -1497,7 +1567,9 @@ function pzAdd2048Tile() {
   if (!empty.length) return;
 
   const spot = empty[Math.floor(Math.random() * empty.length)];
-  gameData.pz2048[spot.r][spot.c] = Math.random() < 0.9 ? 2 : 4;
+
+  gameData.pz2048[spot.r][spot.c] =
+    Math.random() < 0.9 ? 2 : 4;
 }
 
 function pzDraw2048() {
@@ -1508,16 +1580,42 @@ function pzDraw2048() {
     `
       <div class="pz-2048-head">
         <button class="action" id="pz2048Back">← Puzzle Zone</button>
-        <div><small>SCORE</small><b id="pz2048Score">${gameData.pz2048Score}</b></div>
-        <div><small>BEST</small><b>${state.best2048}</b></div>
+
+        <div>
+          <small>SCORE</small>
+          <b id="pz2048Score">${gameData.pz2048Score}</b>
+        </div>
+
+        <div>
+          <small>BEST</small>
+          <b>${state.best2048}</b>
+        </div>
       </div>
-      <p class="muted">${pzText("Join matching numbers to reach 2048.", "عددهای یکسان را ترکیب کن و به ۲۰۴۸ برس.", "ادمج الأرقام المتشابهة للوصول إلى 2048.", "Aynı sayıları birleştirerek 2048'e ulaş.", "Une números iguales para llegar a 2048.")}</p>
+
+      <p class="muted">${pzText(
+        "Join matching numbers to reach 2048.",
+        "عددهای یکسان را ترکیب کن و به ۲۰۴۸ برس.",
+        "ادمج الأرقام المتشابهة للوصول إلى 2048.",
+        "Aynı sayıları birleştirerek 2048'e ulaş.",
+        "Une números iguales para llegar a 2048."
+      )}</p>
+
       <div class="pz-2048-board" id="pz2048Board"></div>
+
       <div class="pz-2048-controls">
         <button data-dir="up">↑</button>
-        <div><button data-dir="left">←</button><button data-dir="down">↓</button><button data-dir="right">→</button></div>
+        <div>
+          <button data-dir="left">←</button>
+          <button data-dir="down">↓</button>
+          <button data-dir="right">→</button>
+        </div>
       </div>
-      <button class="action" id="pz2048New">${pzText("New game", "بازی جدید", "لعبة جديدة", "Yeni oyun", "Nuevo juego")}</button>
+
+      <button class="action" id="pz2048New">
+        ${pzText("New game", "بازی جدید", "لعبة جديدة", "Yeni oyun", "Nuevo juego")}
+      </button>
+
+      <p class="muted" id="pz2048Message"></p>
     `
   );
 
@@ -1525,16 +1623,26 @@ function pzDraw2048() {
   $("pz2048New").onclick = pzOpen2048;
 
   const board = $("pz2048Board");
-  gameData.pz2048.forEach(row => row.forEach(value => {
-    const cell = document.createElement("div");
-    cell.className = "pz-2048-cell" + (value ? " v" + value : "");
-    cell.textContent = value || "";
-    board.appendChild(cell);
-  }));
+
+  gameData.pz2048.forEach(row => {
+    row.forEach(value => {
+      const cell = document.createElement("div");
+      cell.className = "pz-2048-cell" + (value ? " v" + value : "");
+      cell.textContent = value || "";
+      board.appendChild(cell);
+    });
+  });
 
   document.querySelectorAll("[data-dir]").forEach(button => {
     button.onclick = () => pzMove2048(button.dataset.dir);
   });
+
+  if (gameData.pz2048Over) {
+    $("pz2048Message").textContent =
+      gameData.pz2048.some(row => row.includes(2048))
+        ? "🏆 2048!"
+        : "Game over";
+  }
 }
 
 function pzMove2048(direction) {
@@ -1555,45 +1663,71 @@ function pzMove2048(direction) {
     }
 
     while (values.length < 4) values.push(0);
+
     return values;
   }
 
   for (let i = 0; i < 4; i++) {
     let line;
 
-    if (direction === "left") line = board[i];
-    if (direction === "right") line = [...board[i]].reverse();
-    if (direction === "up") line = board.map(row => row[i]);
-    if (direction === "down") line = board.map(row => row[i]).reverse();
+    if (direction === "left") {
+      line = board[i];
+    } else if (direction === "right") {
+      line = [...board[i]].reverse();
+    } else if (direction === "up") {
+      line = board.map(row => row[i]);
+    } else if (direction === "down") {
+      line = board.map(row => row[i]).reverse();
+    } else {
+      return;
+    }
 
     line = mergeLine(line);
 
-    if (direction === "right" || direction === "down") line.reverse();
+    if (direction === "right" || direction === "down") {
+      line.reverse();
+    }
 
     for (let j = 0; j < 4; j++) {
-      if (direction === "left" || direction === "right") board[i][j] = line[j];
-      else board[j][i] = line[j];
+      if (direction === "left" || direction === "right") {
+        board[i][j] = line[j];
+      } else {
+        board[j][i] = line[j];
+      }
     }
   }
 
-  const changed = JSON.stringify(board) !== JSON.stringify(gameData.pz2048);
+  const changed =
+    JSON.stringify(board) !== JSON.stringify(gameData.pz2048);
+
   if (!changed) return;
 
   gameData.pz2048 = board;
   gameData.pz2048Score += gained;
 
   const state = pzState();
-  state.best2048 = Math.max(state.best2048, gameData.pz2048Score);
+
+  state.best2048 = Math.max(
+    state.best2048,
+    gameData.pz2048Score
+  );
+
   pzSave(state);
 
   pzAdd2048Tile();
 
   const won = board.some(row => row.includes(2048));
-  const movesAvailable = board.some((row, r) => row.some((value, c) => {
-    if (!value) return true;
-    return (r < 3 && board[r + 1][c] === value) ||
-      (c < 3 && board[r][c + 1] === value);
-  }));
+
+  const movesAvailable = board.some((row, r) =>
+    row.some((value, c) => {
+      if (!value) return true;
+
+      return (
+        (r < 3 && board[r + 1][c] === value) ||
+        (c < 3 && board[r][c + 1] === value)
+      );
+    })
+  );
 
   if (won) {
     addReward(30, 40, true);
@@ -1605,143 +1739,37 @@ function pzMove2048(direction) {
   }
 
   pzDraw2048();
-
-  if (gameData.pz2048Over) {
-    const boardElement = $("pz2048Board");
-    if (boardElement) {
-      const note = document.createElement("p");
-      note.className = "pz-2048-message";
-      note.textContent = won ? "🏆 2048!" : "Game over";
-      boardElement.after(note);
-    }
-  }
 }
+/* ---------- KEYBOARD CONTROLS FOR 2048 ---------- */
 
+function handlePuzzle2048Keys(event) {
+  if (
+    currentGame !== "puzzle" ||
+    !gameData.pz2048 ||
+    gameData.pz2048Over
+  ) return;
 
-function isSolvable(tiles) {
-  let inversions = 0;
+  if (
+    ["INPUT", "TEXTAREA", "SELECT"].includes(
+      document.activeElement?.tagName
+    )
+  ) return;
 
-  for (let i = 0; i < tiles.length; i++) {
-    for (let j = i + 1; j < tiles.length; j++) {
-      if (tiles[i] && tiles[j] && tiles[i] > tiles[j]) inversions++;
-    }
-  }
-
-  return inversions % 2 === 0;
-}
-
-function renderPuzzle() {
-  const grid = $("numberGrid");
-  if (!grid) return;
-
-  grid.innerHTML = "";
-
-  gameData.tiles.forEach((number, index) => {
-    const button = document.createElement("button");
-    button.textContent = number || "";
-
-    if (!number) button.classList.add("empty");
-
-    button.disabled = !number || gameData.puzzleFinished;
-    button.onclick = () => movePuzzle(index);
-
-    grid.appendChild(button);
-  });
-
-  $("puzzleMoves").textContent = gameData.moves;
-}
-
-function movePuzzle(index) {
-  if (gameData.puzzleFinished) return;
-
-  const empty = gameData.tiles.indexOf(0);
-
-  const distance =
-    Math.abs(Math.floor(index / 3) - Math.floor(empty / 3)) +
-    Math.abs(index % 3 - empty % 3);
-
-  if (distance !== 1) return;
-
-  startPuzzleTimer();
-
-  [gameData.tiles[index], gameData.tiles[empty]] =
-    [gameData.tiles[empty], gameData.tiles[index]];
-
-  gameData.moves++;
-  renderPuzzle();
-
-  const solved = gameData.tiles.every(
-    (value, i) => value === (i + 1) % 9
-  );
-
-  if (solved) finishPuzzle();
-}
-
-function finishPuzzle() {
-  if (gameData.puzzleFinished) return;
-
-  gameData.puzzleFinished = true;
-
-  if (gameTimer) clearInterval(gameTimer);
-
-  const seconds = gameData.puzzleStartedAt
-    ? Math.floor((Date.now() - gameData.puzzleStartedAt) / 1000)
-    : 0;
-
-  gameData.puzzleSeconds = seconds;
-
-  const difficulty = gameData.puzzleDifficulty;
-  const best = getPuzzleBest();
-  const previous = best[difficulty];
-
-  const isNewRecord =
-    !previous ||
-    seconds < previous.seconds ||
-    (seconds === previous.seconds && gameData.moves < previous.moves);
-
-  if (isNewRecord) {
-    best[difficulty] = {
-      seconds,
-      moves: gameData.moves
-    };
-
-    savePuzzleBest(best);
-  }
-
-  const rewards = {
-    easy: [15, 20],
-    medium: [25, 35],
-    hard: [40, 50]
+  const directions = {
+    ArrowUp: "up",
+    ArrowDown: "down",
+    ArrowLeft: "left",
+    ArrowRight: "right"
   };
 
-  const [coins, xp] = rewards[difficulty];
+  const direction = directions[event.key];
+  if (!direction) return;
 
-  addReward(coins, xp, true);
-
-  const score = Math.max(
-    0,
-    100 - gameData.moves + (difficulty === "hard" ? 50 : difficulty === "medium" ? 25 : 0)
-  );
-
-  recordGame(score);
-
-  $("puzzleStatus").textContent =
-    puzzleText(
-      "Puzzle completed!",
-      "پازل رو حل کردی!",
-      "تم حل اللغز!",
-      "Bulmacayı çözdün!",
-      "¡Puzzle completado!"
-    ) +
-    ` ${formatPuzzleTime(seconds)} · ${gameData.moves} ${t("moves")}` +
-    (isNewRecord
-      ? " 🏆 " + puzzleText("New record!", "رکورد جدید!", "رقم قياسي جديد!", "Yeni rekor!", "¡Nuevo récord!")
-      : "");
-
-  updatePuzzleBest();
-  renderPuzzle();
+  event.preventDefault();
+  pzMove2048(direction);
 }
 
+/* ---------- AIM GAME ---------- */
 
 function openAim() {
   showGame(t("aim"), `
@@ -1760,18 +1788,26 @@ function openAim() {
 
     gameData.score++;
     gameData.remaining--;
+
     $("aimScore").textContent = gameData.score;
-    $("aimStatus").textContent = `${t("tap")}: ${gameData.remaining}`;
+    $("aimStatus").textContent =
+      `${t("tap")}: ${gameData.remaining}`;
 
     if (gameData.remaining <= 0) {
       gameData.done = true;
-      $("aimStatus").textContent = `${t("finished")} ${t("score")}: ${gameData.score}`;
+
+      $("aimStatus").textContent =
+        `${t("finished")} ${t("score")}: ${gameData.score}`;
+
       addReward(10, 15, true);
       recordGame(gameData.score);
+
       $("targetButton").disabled = true;
     }
   };
 }
+
+/* ---------- QUICK RACER AND JUMP ---------- */
 
 function openTapGame(type, total) {
   const isCar = type === "car";
@@ -1779,10 +1815,13 @@ function openTapGame(type, total) {
 
   showGame(title, `
     <p class="muted">${t("tapToMove")}</p>
+
     <div class="big" id="tapProgress">0 / ${total}</div>
+
     <div class="row">
       <button class="action" id="tapMove">${t("tap")}</button>
     </div>
+
     <p class="muted" id="tapStatus"></p>
   `);
 
@@ -1793,26 +1832,35 @@ function openTapGame(type, total) {
     if (gameData.done) return;
 
     gameData.progress++;
-    $("tapProgress").textContent = `${gameData.progress} / ${total}`;
+
+    $("tapProgress").textContent =
+      `${gameData.progress} / ${total}`;
 
     if (gameData.progress >= total) {
       gameData.done = true;
+
       $("tapStatus").textContent = t("finish");
+
       addReward(12, 18, true);
       recordGame(total);
+
       $("tapMove").disabled = true;
     }
   };
 }
 
+/* ---------- IMAGE QUIZ ---------- */
+
 function openImageQuiz() {
   showGame(t("image"), `
     <p class="muted">${t("imageQuestion")}</p>
+
     <div class="row">
       <button class="choice" data-answer="sun">☀️ ${t("sun")}</button>
       <button class="choice" data-answer="moon">🌙 ${t("moon")}</button>
       <button class="choice" data-answer="star">⭐ ${t("star")}</button>
     </div>
+
     <p class="muted" id="imageStatus"></p>
   `);
 
@@ -1821,12 +1869,18 @@ function openImageQuiz() {
   document.querySelectorAll("[data-answer]").forEach(button => {
     button.onclick = () => {
       if (gameData.answered) return;
+
       gameData.answered = true;
 
       const correct = button.dataset.answer === "sun";
-      $("imageStatus").textContent = correct ? t("correctAnswer") : t("wrongAnswer");
 
-      if (correct) addReward(5, 10, true);
+      $("imageStatus").textContent =
+        correct ? t("correctAnswer") : t("wrongAnswer");
+
+      if (correct) {
+        addReward(5, 10, true);
+      }
+
       recordGame(correct ? 1 : 0);
 
       document.querySelectorAll("[data-answer]").forEach(item => {
@@ -1836,15 +1890,20 @@ function openImageQuiz() {
   });
 }
 
+/* ---------- FOOTBALL ---------- */
+
 function openFootball() {
   showGame(t("football"), `
     <p class="muted">${t("kickQuestion")}</p>
+
     <div class="big">🥅 ⚽</div>
+
     <div class="row">
       <button class="choice" data-kick="left">${t("left")}</button>
       <button class="choice" data-kick="center">${t("center")}</button>
       <button class="choice" data-kick="right">${t("right")}</button>
     </div>
+
     <p class="muted" id="footballStatus"></p>
   `);
 
@@ -1853,14 +1912,23 @@ function openFootball() {
   document.querySelectorAll("[data-kick]").forEach(button => {
     button.onclick = () => {
       if (gameData.kicked) return;
+
       gameData.kicked = true;
 
-      const goalkeeper = ["left", "center", "right"][Math.floor(Math.random() * 3)];
+      const goalkeeper =
+        ["left", "center", "right"][
+          Math.floor(Math.random() * 3)
+        ];
+
       const goal = button.dataset.kick !== goalkeeper;
 
-      $("footballStatus").textContent = goal ? t("goal") : t("wrong");
+      $("footballStatus").textContent =
+        goal ? t("goal") : t("wrong");
 
-      if (goal) addReward(8, 12, true);
+      if (goal) {
+        addReward(8, 12, true);
+      }
+
       recordGame(goal ? 1 : 0);
 
       document.querySelectorAll("[data-kick]").forEach(item => {
@@ -1870,10 +1938,14 @@ function openFootball() {
   });
 }
 
+/* ---------- PROFILE ---------- */
+
 function showProfile() {
   closeGame();
+
   showGame(t("profile"), `
     <p class="muted">${t("profileText")}</p>
+
     <div class="stats">
       <div><b>${data.coins}</b><small>🪙</small></div>
       <div><b>${data.wins}</b><small>${t("wins")}</small></div>
@@ -1883,15 +1955,24 @@ function showProfile() {
   `);
 }
 
+/* ---------- HELP ---------- */
+
 function showHelp() {
   closeGame();
-  showGame(t("help"), `<p class="muted">${t("helpText")}</p>`);
+
+  showGame(
+    t("help"),
+    `<p class="muted">${t("helpText")}</p>`
+  );
 }
+
+/* ---------- INITIALIZATION ---------- */
 
 function init() {
   loadSavedData();
 
   const tg = window.Telegram?.WebApp;
+
   if (tg) {
     tg.ready();
     tg.expand();
@@ -1913,8 +1994,12 @@ function init() {
   $("helpTab").addEventListener("click", showHelp);
 
   $("modal").addEventListener("click", event => {
-    if (event.target === $("modal")) closeGame();
+    if (event.target === $("modal")) {
+      closeGame();
+    }
   });
+
+  document.addEventListener("keydown", handlePuzzle2048Keys);
 
   applyLanguage();
 }
