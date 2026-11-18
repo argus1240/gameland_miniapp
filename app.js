@@ -943,165 +943,680 @@ function finishTicMatch() {
 
 
 
-function puzzleText(en, fa, ar, tr, es) {
-  const lang = localStorage.getItem("gvLang") || "en";
+
+/* =========================
+   GAMEVERSE - PUZZLE ZONE
+   3000 Match-3 stages + Picture Puzzle + 2048
+========================= */
+
+const PZ_CHAPTERS = [
+  "Crystal Forest", "Moonlit Valley", "Dragon Peaks", "Mystic Ocean",
+  "Frozen Kingdom", "Golden Desert", "Shadow Realm", "Sky Islands",
+  "Ancient Ruins", "Starfall Kingdom", "Emerald Caves", "Phoenix Lands"
+];
+
+const PZ_GEMS = ["🔴", "🔵", "🟢", "🟡", "🟣", "🟠"];
+const PZ_STORAGE = "gvPuzzleZone_v1";
+
+function pzLoad() {
+  try {
+    return JSON.parse(localStorage.getItem(PZ_STORAGE)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function pzSave(state) {
+  localStorage.setItem(PZ_STORAGE, JSON.stringify(state));
+}
+
+function pzText(en, fa, ar, tr, es) {
+  const lang = currentLang || "en";
   return ({ en, fa, ar, tr, es })[lang] || en;
 }
 
-function getPuzzleBest() {
-  try {
-    return JSON.parse(localStorage.getItem("gvPuzzleBest")) || {
-      easy: null,
-      medium: null,
-      hard: null
-    };
-  } catch {
-    return { easy: null, medium: null, hard: null };
-  }
+function pzState() {
+  const saved = pzLoad();
+  return {
+    unlocked: Math.max(1, Number(saved.unlocked) || 1),
+    stars: saved.stars || {},
+    coins: Number(saved.coins) || 0,
+    best2048: Number(saved.best2048) || 0
+  };
 }
 
-function savePuzzleBest(best) {
-  localStorage.setItem("gvPuzzleBest", JSON.stringify(best));
+function pzChapterName(chapter) {
+  const names = [
+    ["Crystal Forest", "جنگل کریستالی", "الغابة الكريستالية", "Kristal Ormanı", "Bosque de Cristal"],
+    ["Moonlit Valley", "دره مهتابی", "وادي ضوء القمر", "Ay Işığı Vadisi", "Valle de Luna"],
+    ["Dragon Peaks", "قله اژدها", "قمم التنين", "Ejderha Tepeleri", "Picos del Dragón"],
+    ["Mystic Ocean", "اقیانوس جادویی", "المحيط السحري", "Gizemli Okyanus", "Océano Místico"],
+    ["Frozen Kingdom", "قلمرو یخی", "المملكة الجليدية", "Buz Krallığı", "Reino Helado"],
+    ["Golden Desert", "بیابان طلایی", "الصحراء الذهبية", "Altın Çöl", "Desierto Dorado"],
+    ["Shadow Realm", "سرزمین سایه‌ها", "عالم الظلال", "Gölgeler Diyarı", "Reino de Sombras"],
+    ["Sky Islands", "جزیره‌های آسمانی", "جزر السماء", "Gökyüzü Adaları", "Islas del Cielo"],
+    ["Ancient Ruins", "ویرانه‌های باستانی", "الآثار القديمة", "Antik Kalıntılar", "Ruinas Antiguas"],
+    ["Starfall Kingdom", "قلمرو بارش ستاره", "مملكة الشهب", "Yıldız Krallığı", "Reino Estelar"],
+    ["Emerald Caves", "غارهای زمردی", "كهوف الزمرد", "Zümrüt Mağaraları", "Cuevas Esmeralda"],
+    ["Phoenix Lands", "سرزمین ققنوس", "أرض العنقاء", "Anka Diyarı", "Tierras del Fénix"]
+  ];
+  return names[chapter % names.length][
+    ["en", "fa", "ar", "tr", "es"].indexOf(currentLang)
+  ] || names[chapter % names.length][0];
 }
 
 function openPuzzle() {
-  if (gameTimer) clearInterval(gameTimer);
+  pzHome();
+}
 
-  showGame(t("puzzle"), `
-    <p class="muted">${t("puzzleInfo")}</p>
+function pzHome() {
+  const state = pzState();
 
-    <div class="row" style="justify-content:space-between; flex-wrap:wrap;">
-      <label>
-        ${puzzleText("Difficulty", "سختی", "الصعوبة", "Zorluk", "Dificultad")}
-        <select id="puzzleDifficulty" class="action">
-          <option value="easy">${puzzleText("Easy", "آسان", "سهل", "Kolay", "Fácil")}</option>
-          <option value="medium">${puzzleText("Medium", "متوسط", "متوسط", "Orta", "Media")}</option>
-          <option value="hard">${puzzleText("Hard", "سخت", "صعب", "Zor", "Difícil")}</option>
-        </select>
-      </label>
-      <span>${t("moves")}: <b id="puzzleMoves">0</b></span>
-      <span>${puzzleText("Time", "زمان", "الوقت", "Süre", "Tiempo")}: <b id="puzzleTime">00:00</b></span>
-    </div>
+  showGame(
+    "✨ Puzzle Zone",
+    `
+      <div class="pz-home">
+        <div class="pz-hero">
+          <div class="pz-orb">💎</div>
+          <div class="pz-eyebrow">GAMEVERSE ADVENTURE</div>
+          <h2>Puzzle Zone</h2>
+          <p>${pzText(
+            "Three worlds. Thousands of challenges.",
+            "سه دنیا، هزاران چالش",
+            "ثلاثة عوالم وآلاف التحديات",
+            "Üç dünya, binlerce meydan okuma",
+            "Tres mundos. Miles de desafíos."
+          )}</p>
+        </div>
 
-    <p class="muted" id="puzzleBest"></p>
+        <button class="pz-game-card pz-match-card" id="pzOpenMatch">
+          <span class="pz-card-icon">🧙‍♂️</span>
+          <span class="pz-card-copy">
+            <b>Fantasy Match-3</b>
+            <small>3000 ${pzText("stages", "مرحله", "مرحلة", "bölüm", "niveles")} · 60 chapters</small>
+          </span>
+          <span class="pz-card-arrow">➜</span>
+        </button>
 
-    <div id="numberGrid" class="number-grid"></div>
+        <button class="pz-game-card pz-picture-card" id="pzOpenPicture">
+          <span class="pz-card-icon">🖼️</span>
+          <span class="pz-card-copy">
+            <b>Picture Puzzle</b>
+            <small>${pzText("Arrange the picture", "قطعات تصویر را مرتب کن", "رتب الصورة", "Resmi düzenle", "Ordena la imagen")}</small>
+          </span>
+          <span class="pz-card-arrow">➜</span>
+        </button>
 
-    <div class="row" style="flex-wrap:wrap;">
-      <button class="action" id="shufflePuzzle">${t("shuffle")}</button>
-      <button class="action" id="restartPuzzle">
-        ${puzzleText("Restart", "شروع دوباره", "إعادة", "Yeniden başlat", "Reiniciar")}
+        <button class="pz-game-card pz-2048-card" id="pzOpen2048">
+          <span class="pz-card-icon">🔢</span>
+          <span class="pz-card-copy">
+            <b>2048</b>
+            <small>${pzText("Merge numbers and beat your record", "عددها را ترکیب کن و رکورد بزن", "ادمج الأرقام وحطم رقمك", "Sayıları birleştir ve rekor kır", "Combina números y supera tu récord")}</small>
+          </span>
+          <span class="pz-card-arrow">➜</span>
+        </button>
+
+        <div class="pz-progress">
+          <span>🏆 ${pzText("Your adventure", "ماجراجویی تو", "مغامرتك", "Maceran", "Tu aventura")}</span>
+          <b>${state.unlocked} / 3000</b>
+          <div class="pz-progress-track">
+            <i style="width:${Math.min(100, state.unlocked / 30)}%"></i>
+          </div>
+        </div>
+      </div>
+    `
+  );
+
+  $("pzOpenMatch").onclick = pzMap;
+  $("pzOpenPicture").onclick = pzOpenPicture;
+  $("pzOpen2048").onclick = pzOpen2048;
+}
+
+/* ---------- MATCH-3 ADVENTURE ---------- */
+
+function pzMap() {
+  const state = pzState();
+  const currentChapter = Math.floor((state.unlocked - 1) / 50);
+  const firstStage = currentChapter * 50 + 1;
+  const lastStage = Math.min(3000, firstStage + 49);
+
+  let stageButtons = "";
+
+  for (let stage = firstStage; stage <= lastStage; stage++) {
+    const locked = stage > state.unlocked;
+    const stars = Number(state.stars[stage]) || 0;
+
+    stageButtons += `
+      <button class="pz-stage ${locked ? "locked" : ""} ${stage === state.unlocked ? "current" : ""}"
+        data-pz-stage="${stage}" ${locked ? "disabled" : ""}>
+        <b>${locked ? "🔒" : stage}</b>
+        <small>${stars ? "★".repeat(stars) : "☆"}</small>
       </button>
-    </div>
+    `;
+  }
 
-    <p class="muted" id="puzzleStatus"></p>
-  `);
+  showGame(
+    "🗺️ Fantasy Adventure",
+    `
+      <div class="pz-map-head">
+        <button class="action" id="pzBackHome">← ${pzText("Games", "بازی‌ها", "الألعاب", "Oyunlar", "Juegos")}</button>
+        <span>💎 ${state.coins}</span>
+      </div>
+      <div class="pz-chapter-banner">
+        <small>CHAPTER ${currentChapter + 1} / 60</small>
+        <h2>${pzChapterName(currentChapter)}</h2>
+        <p>${pzText("Choose your next challenge", "مرحله بعدی را انتخاب کن", "اختر التحدي التالي", "Sonraki mücadeleyi seç", "Elige tu próximo desafío")}</p>
+        <div class="pz-chapter-progress">${state.unlocked} / 3000</div>
+      </div>
+      <div class="pz-stage-grid">${stageButtons}</div>
+    `
+  );
 
-  gameData.puzzleDifficulty = "easy";
-  startPuzzle();
+  $("pzBackHome").onclick = pzHome;
 
-  $("puzzleDifficulty").onchange = () => {
-    gameData.puzzleDifficulty = $("puzzleDifficulty").value;
-    startPuzzle();
-  };
-
-  $("shufflePuzzle").onclick = startPuzzle;
-  $("restartPuzzle").onclick = startPuzzle;
+  document.querySelectorAll("[data-pz-stage]").forEach(button => {
+    button.onclick = () => pzStartMatch(Number(button.dataset.pzStage));
+  });
 }
 
-function startPuzzle() {
-  if (gameTimer) clearInterval(gameTimer);
-
-  gameData.moves = 0;
-  gameData.puzzleStartedAt = null;
-  gameData.puzzleFinished = false;
-  gameData.puzzleSeconds = 0;
-
-  $("puzzleStatus").textContent = "";
-  $("puzzleTime").textContent = "00:00";
-
-  updatePuzzleBest();
-  shufflePuzzle();
-  renderPuzzle();
+function pzLevelGoal(stage) {
+  return 350 + stage * 45 + Math.floor(stage / 10) * 100;
 }
 
-function updatePuzzleBest() {
-  const best = getPuzzleBest();
-  const difficulty = gameData.puzzleDifficulty || "easy";
-  const value = best[difficulty];
+function pzCreateBoard() {
+  const board = [];
 
-  $("puzzleBest").textContent = value
-    ? `${puzzleText("Best", "بهترین رکورد", "أفضل نتيجة", "En iyi", "Récord")}: ${value.moves} ${t("moves")} · ${formatPuzzleTime(value.seconds)}`
-    : puzzleText(
-        "No record yet",
-        "هنوز رکوردی ثبت نشده",
-        "لا يوجد سجل بعد",
-        "Henüz rekor yok",
-        "Aún no hay récord"
+  for (let r = 0; r < 8; r++) {
+    board[r] = [];
+
+    for (let c = 0; c < 8; c++) {
+      let gem;
+
+      do {
+        gem = Math.floor(Math.random() * PZ_GEMS.length);
+      } while (
+        (c >= 2 && board[r][c - 1] === gem && board[r][c - 2] === gem) ||
+        (r >= 2 && board[r - 1][c] === gem && board[r - 2][c] === gem)
       );
-}
 
-function formatPuzzleTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-}
-
-function startPuzzleTimer() {
-  if (gameData.puzzleStartedAt || gameData.puzzleFinished) return;
-
-  gameData.puzzleStartedAt = Date.now();
-
-  gameTimer = setInterval(() => {
-    if (gameData.puzzleFinished) {
-      clearInterval(gameTimer);
-      return;
+      board[r][c] = gem;
     }
+  }
 
-    gameData.puzzleSeconds = Math.floor(
-      (Date.now() - gameData.puzzleStartedAt) / 1000
-    );
-
-    const timer = $("puzzleTime");
-    if (timer) timer.textContent = formatPuzzleTime(gameData.puzzleSeconds);
-  }, 1000);
+  return board;
 }
 
-function shufflePuzzle() {
-  const difficulty = gameData.puzzleDifficulty || "easy";
+function pzFindMatches(board) {
+  const found = new Set();
 
-  const shuffleSteps = {
-    easy: 15,
-    medium: 40,
-    hard: 85
-  };
+  for (let r = 0; r < 8; r++) {
+    let count = 1;
 
-  gameData.tiles = [1,2,3,4,5,6,7,8,0];
+    for (let c = 1; c <= 8; c++) {
+      if (c < 8 && board[r][c] !== null && board[r][c] === board[r][c - 1]) {
+        count++;
+      } else {
+        if (count >= 3) {
+          for (let k = c - count; k < c; k++) found.add(`${r},${k}`);
+        }
+        count = 1;
+      }
+    }
+  }
 
-  let previousEmpty = -1;
+  for (let c = 0; c < 8; c++) {
+    let count = 1;
 
-  for (let step = 0; step < shuffleSteps[difficulty]; step++) {
-    const empty = gameData.tiles.indexOf(0);
-    const possible = [];
+    for (let r = 1; r <= 8; r++) {
+      if (r < 8 && board[r][c] !== null && board[r][c] === board[r - 1][c]) {
+        count++;
+      } else {
+        if (count >= 3) {
+          for (let k = r - count; k < r; k++) found.add(`${k},${c}`);
+        }
+        count = 1;
+      }
+    }
+  }
 
-    for (let i = 0; i < 9; i++) {
-      const distance =
-        Math.abs(Math.floor(i / 3) - Math.floor(empty / 3)) +
-        Math.abs(i % 3 - empty % 3);
+  return [...found].map(key => key.split(",").map(Number));
+}
 
-      if (distance === 1 && i !== previousEmpty) {
-        possible.push(i);
+function pzStartMatch(stage) {
+  gameData.pzStage = stage;
+  gameData.pzBoard = pzCreateBoard();
+  gameData.pzScore = 0;
+  gameData.pzMoves = Math.max(18, 30 - Math.floor(stage / 150));
+  gameData.pzSelected = null;
+  gameData.pzBusy = false;
+  gameData.pzFinished = false;
+
+  pzDrawMatch();
+}
+
+function pzDrawMatch() {
+  const stage = gameData.pzStage;
+  const chapter = Math.floor((stage - 1) / 50);
+  const goal = pzLevelGoal(stage);
+
+  showGame(
+    "💎 " + pzText("Crystal Match", "بازی کریستال", "مطابقة الكريستال", "Kristal Eşleştirme", "Cristales"),
+    `
+      <div class="pz-match-top">
+        <button class="action" id="pzMapBack">← Map</button>
+        <span>CHAPTER ${chapter + 1}</span>
+        <b>LEVEL ${stage}</b>
+      </div>
+
+      <div class="pz-score-panel">
+        <div><small>${pzText("SCORE", "امتیاز", "النقاط", "PUAN", "PUNTOS")}</small><b id="pzScore">${gameData.pzScore}</b></div>
+        <div><small>${pzText("TARGET", "هدف", "الهدف", "HEDEF", "OBJETIVO")}</small><b>${goal}</b></div>
+        <div><small>${pzText("MOVES", "حرکت", "الحركات", "HAMLE", "MOVIMIENTOS")}</small><b id="pzMoves">${gameData.pzMoves}</b></div>
+      </div>
+
+      <div class="pz-board" id="pzBoard"></div>
+      <p class="pz-hint" id="pzHint">${pzText("Swap two neighboring gems to match 3 or more.", "دو کریستال کنار هم را جابه‌جا کن تا سه‌تایی بسازی.", "بدّل جوهرتين متجاورتين لمطابقة ثلاثة.", "Üçlü eşleşme için komşu taşları değiştir.", "Intercambia gemas vecinas para juntar tres.")}</p>
+    `
+  );
+
+  $("pzMapBack").onclick = pzMap;
+  pzRenderBoard();
+}
+
+function pzRenderBoard() {
+  const element = $("pzBoard");
+  if (!element) return;
+
+  element.innerHTML = "";
+
+  gameData.pzBoard.forEach((row, r) => {
+    row.forEach((gem, c) => {
+      const button = document.createElement("button");
+      button.className = "pz-gem";
+      button.textContent = PZ_GEMS[gem];
+
+      if (
+        gameData.pzSelected &&
+        gameData.pzSelected.r === r &&
+        gameData.pzSelected.c === c
+      ) button.classList.add("selected");
+
+      button.disabled = gameData.pzBusy || gameData.pzFinished;
+      button.onclick = () => pzSelectGem(r, c);
+      element.appendChild(button);
+    });
+  });
+}
+
+function pzSelectGem(r, c) {
+  if (gameData.pzBusy || gameData.pzFinished) return;
+
+  if (!gameData.pzSelected) {
+    gameData.pzSelected = { r, c };
+    pzRenderBoard();
+    return;
+  }
+
+  const first = gameData.pzSelected;
+  const distance = Math.abs(first.r - r) + Math.abs(first.c - c);
+
+  if (distance !== 1) {
+    gameData.pzSelected = { r, c };
+    pzRenderBoard();
+    return;
+  }
+
+  const board = gameData.pzBoard;
+  const temp = board[first.r][first.c];
+  board[first.r][first.c] = board[r][c];
+  board[r][c] = temp;
+  gameData.pzSelected = null;
+
+  const matches = pzFindMatches(board);
+
+  if (!matches.length) {
+    const back = board[first.r][first.c];
+    board[first.r][first.c] = board[r][c];
+    board[r][c] = back;
+    pzRenderBoard();
+    return;
+  }
+
+  gameData.pzMoves--;
+  gameData.pzBusy = true;
+  pzResolveMatches();
+}
+
+function pzResolveMatches() {
+  const matches = pzFindMatches(gameData.pzBoard);
+
+  if (!matches.length) {
+    gameData.pzBusy = false;
+    pzRenderBoard();
+    pzUpdateMatchStats();
+
+    if (gameData.pzScore >= pzLevelGoal(gameData.pzStage)) {
+      pzFinishMatch(true);
+    } else if (gameData.pzMoves <= 0) {
+      pzFinishMatch(false);
+    }
+    return;
+  }
+
+  matches.forEach(([r, c]) => {
+    gameData.pzBoard[r][c] = null;
+  });
+
+  gameData.pzScore += matches.length * 20;
+
+  for (let c = 0; c < 8; c++) {
+    const remaining = [];
+
+    for (let r = 7; r >= 0; r--) {
+      if (gameData.pzBoard[r][c] !== null) {
+        remaining.push(gameData.pzBoard[r][c]);
       }
     }
 
-    const chosen = possible[Math.floor(Math.random() * possible.length)];
+    for (let r = 7; r >= 0; r--) {
+      gameData.pzBoard[r][c] = remaining[7 - r] ??
+        Math.floor(Math.random() * PZ_GEMS.length);
+    }
+  }
 
-    [gameData.tiles[chosen], gameData.tiles[empty]] =
-      [gameData.tiles[empty], gameData.tiles[chosen]];
+  pzRenderBoard();
+  pzUpdateMatchStats();
 
-    previousEmpty = empty;
+  setTimeout(pzResolveMatches, 180);
+}
+
+function pzUpdateMatchStats() {
+  const score = $("pzScore");
+  const moves = $("pzMoves");
+  if (score) score.textContent = gameData.pzScore;
+  if (moves) moves.textContent = gameData.pzMoves;
+}
+
+function pzFinishMatch(won) {
+  if (gameData.pzFinished) return;
+  gameData.pzFinished = true;
+  gameData.pzBusy = true;
+
+  const stage = gameData.pzStage;
+  const state = pzState();
+
+  if (won) {
+    const stars = gameData.pzScore >= pzLevelGoal(stage) * 1.8 ? 3 :
+      gameData.pzScore >= pzLevelGoal(stage) * 1.35 ? 2 : 1;
+
+    state.stars[stage] = Math.max(Number(state.stars[stage]) || 0, stars);
+    state.unlocked = Math.max(state.unlocked, Math.min(3000, stage + 1));
+    state.coins += 10 + stars * 5;
+    pzSave(state);
+
+    addReward(10 + stars * 5, 15 + stars * 5, true);
+    recordGame(gameData.pzScore);
+  }
+
+  const message = won
+    ? `🏆 ${pzText("Level completed!", "مرحله با موفقیت تمام شد!", "اكتمل المستوى!", "Bölüm tamamlandı!", "¡Nivel completado!")}`
+    : `✨ ${pzText("Good try! Give it another go.", "تلاش خوبی بود! دوباره امتحان کن.", "محاولة جيدة! حاول مرة أخرى.", "Güzel deneme! Tekrar dene.", "¡Buen intento! Prueba otra vez.")}`;
+
+  const element = $("pzHint");
+  if (element) element.textContent = message;
+
+  const board = $("pzBoard");
+  if (board) board.innerHTML = `
+    <div class="pz-result">
+      <div>${won ? "🏆" : "💫"}</div>
+      <h2>${won ? "LEVEL COMPLETE" : "TRY AGAIN"}</h2>
+      <p>${won ? "⭐".repeat(Number(state.stars[stage]) || 1) : ""}</p>
+      <button class="action" id="pzContinue">${won ? "Next Level ➜" : "Retry ↻"}</button>
+      <button class="action" id="pzStageMap">Adventure Map</button>
+    </div>
+  `;
+
+  $("pzContinue").onclick = () => {
+    if (won && stage < 3000) pzStartMatch(stage + 1);
+    else pzStartMatch(stage);
+  };
+
+  $("pzStageMap").onclick = pzMap;
+}
+
+/* ---------- PICTURE PUZZLE ---------- */
+
+const PZ_PICTURES = ["🌈", "🏰", "🐉", "🦄", "🌋", "🌌", "🧚", "🐬", "🌳"];
+
+function pzOpenPicture() {
+  gameData.picMoves = 0;
+  gameData.picSolved = false;
+  gameData.picTiles = [1,2,3,4,5,6,7,8,0];
+
+  for (let i = 0; i < 100; i++) {
+    const empty = gameData.picTiles.indexOf(0);
+    const options = [];
+
+    for (let j = 0; j < 9; j++) {
+      const distance = Math.abs(Math.floor(j / 3) - Math.floor(empty / 3)) +
+        Math.abs(j % 3 - empty % 3);
+      if (distance === 1) options.push(j);
+    }
+
+    const chosen = options[Math.floor(Math.random() * options.length)];
+    [gameData.picTiles[empty], gameData.picTiles[chosen]] =
+      [gameData.picTiles[chosen], gameData.picTiles[empty]];
+  }
+
+  pzDrawPicture();
+}
+
+function pzDrawPicture() {
+  showGame(
+    "🖼️ Picture Puzzle",
+    `
+      <p class="muted">${pzText("Put the picture tiles in the correct order.", "قطعات تصویر را به ترتیب درست بچین.", "رتب قطع الصورة بشكل صحيح.", "Resim parçalarını doğru sıraya koy.", "Ordena las piezas de la imagen.")}</p>
+      <div class="pz-picture-preview">${PZ_PICTURES[gameData.picTiles[0] ? gameData.picTiles[0] - 1 : 0]}</div>
+      <p class="pz-picture-stats">${pzText("Moves", "حرکت‌ها", "الحركات", "Hamle", "Movimientos")}: <b id="pzPicMoves">${gameData.picMoves}</b></p>
+      <div class="pz-picture-grid" id="pzPictureGrid"></div>
+      <button class="action" id="pzPicNew">${pzText("New puzzle", "پازل جدید", "لغز جديد", "Yeni bulmaca", "Nuevo puzzle")}</button>
+      <button class="action" id="pzPicBack">← Puzzle Zone</button>
+      <p class="muted" id="pzPicStatus"></p>
+    `
+  );
+
+  const grid = $("pzPictureGrid");
+  gameData.picTiles.forEach((value, index) => {
+    const button = document.createElement("button");
+    button.className = "pz-picture-tile";
+    button.textContent = value ? PZ_PICTURES[value - 1] : "";
+    button.disabled = !value || gameData.picSolved;
+    button.onclick = () => pzPictureMove(index);
+    grid.appendChild(button);
+  });
+
+  $("pzPicNew").onclick = pzOpenPicture;
+  $("pzPicBack").onclick = pzHome;
+}
+
+function pzPictureMove(index) {
+  if (gameData.picSolved) return;
+
+  const empty = gameData.picTiles.indexOf(0);
+  const distance = Math.abs(Math.floor(index / 3) - Math.floor(empty / 3)) +
+    Math.abs(index % 3 - empty % 3);
+
+  if (distance !== 1) return;
+
+  [gameData.picTiles[index], gameData.picTiles[empty]] =
+    [gameData.picTiles[empty], gameData.picTiles[index]];
+
+  gameData.picMoves++;
+
+  const solved = gameData.picTiles.every(
+    (value, i) => value === (i + 1) % 9
+  );
+
+  if (solved) {
+    gameData.picSolved = true;
+    addReward(12, 20, true);
+    recordGame(Math.max(0, 100 - gameData.picMoves));
+    $("pzPicStatus").textContent = "🏆 " + pzText(
+      "Picture completed!",
+      "تصویر کامل شد!",
+      "اكتملت الصورة!",
+      "Resim tamamlandı!",
+      "¡Imagen completada!"
+    );
+  }
+
+  pzDrawPicture();
+}
+
+/* ---------- 2048 ---------- */
+
+function pzOpen2048() {
+  gameData.pz2048 = Array.from({ length: 4 }, () => Array(4).fill(0));
+  gameData.pz2048Score = 0;
+  gameData.pz2048Over = false;
+
+  pzAdd2048Tile();
+  pzAdd2048Tile();
+  pzDraw2048();
+}
+
+function pzAdd2048Tile() {
+  const empty = [];
+
+  gameData.pz2048.forEach((row, r) => {
+    row.forEach((value, c) => {
+      if (!value) empty.push({ r, c });
+    });
+  });
+
+  if (!empty.length) return;
+
+  const spot = empty[Math.floor(Math.random() * empty.length)];
+  gameData.pz2048[spot.r][spot.c] = Math.random() < 0.9 ? 2 : 4;
+}
+
+function pzDraw2048() {
+  const state = pzState();
+
+  showGame(
+    "🔢 2048",
+    `
+      <div class="pz-2048-head">
+        <button class="action" id="pz2048Back">← Puzzle Zone</button>
+        <div><small>SCORE</small><b id="pz2048Score">${gameData.pz2048Score}</b></div>
+        <div><small>BEST</small><b>${state.best2048}</b></div>
+      </div>
+      <p class="muted">${pzText("Join matching numbers to reach 2048.", "عددهای یکسان را ترکیب کن و به ۲۰۴۸ برس.", "ادمج الأرقام المتشابهة للوصول إلى 2048.", "Aynı sayıları birleştirerek 2048'e ulaş.", "Une números iguales para llegar a 2048.")}</p>
+      <div class="pz-2048-board" id="pz2048Board"></div>
+      <div class="pz-2048-controls">
+        <button data-dir="up">↑</button>
+        <div><button data-dir="left">←</button><button data-dir="down">↓</button><button data-dir="right">→</button></div>
+      </div>
+      <button class="action" id="pz2048New">${pzText("New game", "بازی جدید", "لعبة جديدة", "Yeni oyun", "Nuevo juego")}</button>
+    `
+  );
+
+  $("pz2048Back").onclick = pzHome;
+  $("pz2048New").onclick = pzOpen2048;
+
+  const board = $("pz2048Board");
+  gameData.pz2048.forEach(row => row.forEach(value => {
+    const cell = document.createElement("div");
+    cell.className = "pz-2048-cell" + (value ? " v" + value : "");
+    cell.textContent = value || "";
+    board.appendChild(cell);
+  }));
+
+  document.querySelectorAll("[data-dir]").forEach(button => {
+    button.onclick = () => pzMove2048(button.dataset.dir);
+  });
+}
+
+function pzMove2048(direction) {
+  if (gameData.pz2048Over) return;
+
+  const board = gameData.pz2048.map(row => [...row]);
+  let gained = 0;
+
+  function mergeLine(line) {
+    let values = line.filter(Boolean);
+
+    for (let i = 0; i < values.length - 1; i++) {
+      if (values[i] === values[i + 1]) {
+        values[i] *= 2;
+        gained += values[i];
+        values.splice(i + 1, 1);
+      }
+    }
+
+    while (values.length < 4) values.push(0);
+    return values;
+  }
+
+  for (let i = 0; i < 4; i++) {
+    let line;
+
+    if (direction === "left") line = board[i];
+    if (direction === "right") line = [...board[i]].reverse();
+    if (direction === "up") line = board.map(row => row[i]);
+    if (direction === "down") line = board.map(row => row[i]).reverse();
+
+    line = mergeLine(line);
+
+    if (direction === "right" || direction === "down") line.reverse();
+
+    for (let j = 0; j < 4; j++) {
+      if (direction === "left" || direction === "right") board[i][j] = line[j];
+      else board[j][i] = line[j];
+    }
+  }
+
+  const changed = JSON.stringify(board) !== JSON.stringify(gameData.pz2048);
+  if (!changed) return;
+
+  gameData.pz2048 = board;
+  gameData.pz2048Score += gained;
+
+  const state = pzState();
+  state.best2048 = Math.max(state.best2048, gameData.pz2048Score);
+  pzSave(state);
+
+  pzAdd2048Tile();
+
+  const won = board.some(row => row.includes(2048));
+  const movesAvailable = board.some((row, r) => row.some((value, c) => {
+    if (!value) return true;
+    return (r < 3 && board[r + 1][c] === value) ||
+      (c < 3 && board[r][c + 1] === value);
+  }));
+
+  if (won) {
+    addReward(30, 40, true);
+    recordGame(gameData.pz2048Score);
+    gameData.pz2048Over = true;
+  } else if (!movesAvailable) {
+    gameData.pz2048Over = true;
+    recordGame(gameData.pz2048Score);
+  }
+
+  pzDraw2048();
+
+  if (gameData.pz2048Over) {
+    const boardElement = $("pz2048Board");
+    if (boardElement) {
+      const note = document.createElement("p");
+      note.className = "pz-2048-message";
+      note.textContent = won ? "🏆 2048!" : "Game over";
+      boardElement.after(note);
+    }
   }
 }
+
 
 function isSolvable(tiles) {
   let inversions = 0;
