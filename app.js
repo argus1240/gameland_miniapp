@@ -1,2393 +1,1702 @@
-const translations = {
-  en: {
-    tagline: "ENTER THE WORLD OF GAMES", language: "Language",
-    level: "Level", xp: "XP", games: "Games",
-    choose: "Choose a game and jump in!", gameCount: "7 games",
-    tic: "Ultimate Tic-Tac-Toe", ticSub: "Solo AI or two players",
-    puzzle: "Puzzle Zone", puzzleSub: "Three magical puzzle games",
-    aim: "Target Rush", aimSub: "Test your reaction",
-    car: "Quick Racer", carSub: "Complete 10 moves",
-    jump: "Jump Challenge", jumpSub: "Reach the finish line",
-    image: "Picture Quiz", imageSub: "What do you see?",
-    football: "Penalty Kick", footballSub: "Beat the goalkeeper",
-    wins: "Wins", played: "Played", best: "Best score",
-    home: "Home", profile: "Profile", help: "Help",
-    close: "Close", start: "Start", restart: "Play again",
-    score: "Score", moves: "Moves", time: "Time",
-    shuffle: "Shuffle", congratulations: "Congratulations!",
-    correct: "Correct!", wrong: "Not quite!", finished: "Game finished!",
-    coinsEarned: "Coins earned", tapTarget: "Tap the target!",
-    tapToMove: "Tap to move forward", finish: "Finish!",
-    goal: "Goal!", saved: "Progress saved",
-    yourTurn: "Your turn", aiTurn: "Computer's turn",
-    player: "Player", draw: "It's a draw!",
-    won: "You won!", lost: "You lost!",
-    chooseMode: "Choose game mode",
-    solo: "Play vs Computer", two: "Two players",
-    easy: "Easy", medium: "Medium", hard: "Hard",
-    selectCell: "Choose a square",
-    puzzleInfo: "Arrange the numbers from 1 to 8. Leave the empty space at the end.",
-    imageQuestion: "Which one is the sun?",
-    sun: "Sun", moon: "Moon", star: "Star",
-    kickQuestion: "Choose where to kick!",
-    left: "Left", center: "Center", right: "Right",
-    helpText: "Play games, earn coins and XP, and improve your best score. Your progress is saved on this device.",
-    profileText: "Your game statistics",
-    noMoves: "No moves left!",
-    next: "Next",
-    tap: "Tap",
-    correctAnswer: "That's right!",
-    wrongAnswer: "Try again next time!",
-    alreadyPlayed: "You have already completed this round.",
-    levelUp: "Level up!",
-    gameOver: "Game over",
-    nineBoards: "Win three small boards in a row to win the big game."
-  },
 
-  fa: {
-    tagline: "وارد دنیای بازی‌ها شو", language: "زبان",
-    level: "سطح", xp: "تجربه", games: "بازی‌ها",
-    choose: "یک بازی انتخاب کن و شروع کن!", gameCount: "۷ بازی",
-    tic: "دوز حرفه‌ای", ticSub: "بازی با هوش مصنوعی یا دو نفره",
-    puzzle: "دنیای پازل", puzzleSub: "سه بازی جذاب فکری",
-    aim: "هدف‌گیری سریع", aimSub: "سرعت واکنشت را بسنج",
-    car: "مسابقه سریع", carSub: "۱۰ حرکت انجام بده",
-    jump: "چالش پرش", jumpSub: "به خط پایان برس",
-    image: "آزمون تصویری", imageSub: "چه چیزی می‌بینی؟",
-    football: "ضربه پنالتی", footballSub: "دروازه‌بان را شکست بده",
-    wins: "بردها", played: "بازی‌ها", best: "بهترین امتیاز",
-    home: "خانه", profile: "پروفایل", help: "راهنما",
-    close: "بستن", start: "شروع", restart: "دوباره بازی کن",
-    score: "امتیاز", moves: "حرکت‌ها", time: "زمان",
-    shuffle: "به‌هم‌ریختن", congratulations: "تبریک!",
-    correct: "درست بود!", wrong: "این بار نه!", finished: "بازی تمام شد!",
-    coinsEarned: "سکه دریافت‌شده", tapTarget: "روی هدف بزن!",
-    tapToMove: "برای حرکت ضربه بزن", finish: "پایان!",
-    goal: "گل!", saved: "پیشرفت ذخیره شد",
-    yourTurn: "نوبت تو", aiTurn: "نوبت کامپیوتر",
-    player: "بازیکن", draw: "مساوی شد!",
-    won: "تو بردی!", lost: "تو باختی!",
-    chooseMode: "حالت بازی را انتخاب کن",
-    solo: "بازی با کامپیوتر", two: "دو نفره",
-    easy: "آسان", medium: "متوسط", hard: "سخت",
-    selectCell: "یک خانه انتخاب کن",
-    puzzleInfo: "اعداد ۱ تا ۸ را مرتب کن و خانه خالی را آخر قرار بده.",
-    imageQuestion: "کدام تصویر خورشید است؟",
-    sun: "خورشید", moon: "ماه", star: "ستاره",
-    kickQuestion: "جهت ضربه را انتخاب کن!",
-    left: "چپ", center: "وسط", right: "راست",
-    helpText: "بازی کن، سکه و تجربه بگیر و رکوردت را بهتر کن. پیشرفت روی همین دستگاه ذخیره می‌شود.",
-    profileText: "آمار بازی‌های تو",
-    noMoves: "حرکتی باقی نمانده!",
-    next: "بعدی",
-    tap: "ضربه",
-    correctAnswer: "آفرین، درست بود!",
-    wrongAnswer: "دفعه بعد بهتر می‌شود!",
-    alreadyPlayed: "این دور را قبلاً تمام کرده‌ای.",
-    levelUp: "سطح جدید!",
-    gameOver: "بازی تمام شد",
-    nineBoards: "برای بردن بازی بزرگ، سه صفحه کوچک را در یک ردیف ببر."
-  },
+(() => {
+  "use strict";
 
-  ar: {
-    tagline: "ادخل عالم الألعاب", language: "اللغة",
-    level: "المستوى", xp: "الخبرة", games: "الألعاب",
-    choose: "اختر لعبة وابدأ!", gameCount: "٧ ألعاب",
-    tic: "إكس أو المتقدمة", ticSub: "ضد الكمبيوتر أو لاعبان",
-    puzzle: "عالم الألغاز", puzzleSub: "ثلاث ألعاب ذهنية",
-    aim: "اختبار الهدف", aimSub: "اختبر سرعة رد فعلك",
-    car: "سباق سريع", carSub: "أكمل ١٠ حركات",
-    jump: "تحدي القفز", jumpSub: "وصل إلى خط النهاية",
-    image: "اختبار الصور", imageSub: "ماذا ترى؟",
-    football: "ركلة جزاء", footballSub: "تغلب على حارس المرمى",
-    wins: "الانتصارات", played: "الألعاب", best: "أفضل نتيجة",
-    home: "الرئيسية", profile: "الملف الشخصي", help: "المساعدة",
-    close: "إغلاق", start: "ابدأ", restart: "العب مجدداً",
-    score: "النتيجة", moves: "الحركات", time: "الوقت",
-    shuffle: "خلط", congratulations: "تهانينا!",
-    correct: "صحيح!", wrong: "ليس تماماً!", finished: "انتهت اللعبة!",
-    coinsEarned: "العملات المكتسبة", tapTarget: "اضغط على الهدف!",
-    tapToMove: "اضغط للتحرك", finish: "النهاية!",
-    goal: "هدف!", saved: "تم حفظ التقدم",
-    yourTurn: "دورك", aiTurn: "دور الكمبيوتر",
-    player: "اللاعب", draw: "تعادل!",
-    won: "لقد فزت!", lost: "لقد خسرت!",
-    chooseMode: "اختر وضع اللعب",
-    solo: "ضد الكمبيوتر", two: "لاعبان",
-    easy: "سهل", medium: "متوسط", hard: "صعب",
-    selectCell: "اختر مربعاً",
-    puzzleInfo: "رتب الأرقام من ١ إلى ٨ واترك المربع الفارغ في النهاية.",
-    imageQuestion: "أي صورة تمثل الشمس؟",
-    sun: "الشمس", moon: "القمر", star: "نجمة",
-    kickQuestion: "اختر اتجاه الركلة!",
-    left: "يسار", center: "وسط", right: "يمين",
-    helpText: "العب واكسب العملات والخبرة وحسّن أفضل نتيجة. يتم حفظ تقدمك على هذا الجهاز.",
-    profileText: "إحصائيات ألعابك",
-    noMoves: "لا توجد حركات متبقية!",
-    next: "التالي", tap: "اضغط",
-    correctAnswer: "إجابة صحيحة!",
-    wrongAnswer: "حاول مرة أخرى لاحقاً!",
-    alreadyPlayed: "لقد أكملت هذه الجولة بالفعل.",
-    levelUp: "مستوى جديد!",
-    gameOver: "انتهت اللعبة",
-    nineBoards: "اربح ثلاث لوحات صغيرة متتالية للفوز باللعبة الكبيرة."
-  },
+  // ------------------------------
+  // GameVerse - Main application
+  // ------------------------------
 
-  tr: {
-    tagline: "OYUN DÜNYASINA GİR", language: "Dil",
-    level: "Seviye", xp: "XP", games: "Oyunlar",
-    choose: "Bir oyun seç ve başla!", gameCount: "7 oyun",
-    tic: "Gelişmiş XOX", ticSub: "Bilgisayara karşı veya iki kişi",
-    puzzle: "Bulmaca Dünyası", puzzleSub: "3 eğlenceli bulmaca",
-    aim: "Hedef Yarışı", aimSub: "Tepki hızını dene",
-    car: "Hızlı Yarış", carSub: "10 hamle tamamla",
-    jump: "Zıplama Mücadelesi", jumpSub: "Bitiş çizgisine ulaş",
-    image: "Resim Testi", imageSub: "Ne görüyorsun?",
-    football: "Penaltı", footballSub: "Kaleciyi yen",
-    wins: "Galibiyet", played: "Oynanan", best: "En iyi skor",
-    home: "Ana Sayfa", profile: "Profil", help: "Yardım",
-    close: "Kapat", start: "Başla", restart: "Tekrar oyna",
-    score: "Skor", moves: "Hamleler", time: "Süre",
-    shuffle: "Karıştır", congratulations: "Tebrikler!",
-    correct: "Doğru!", wrong: "Tam değil!", finished: "Oyun bitti!",
-    coinsEarned: "Kazanılan coin", tapTarget: "Hedefe dokun!",
-    tapToMove: "İlerlemek için dokun", finish: "Bitiş!",
-    goal: "Gol!", saved: "İlerleme kaydedildi",
-    yourTurn: "Senin sıran", aiTurn: "Bilgisayarın sırası",
-    player: "Oyuncu", draw: "Berabere!",
-    won: "Kazandın!", lost: "Kaybettin!",
-    chooseMode: "Oyun modunu seç",
-    solo: "Bilgisayara karşı", two: "İki oyuncu",
-    easy: "Kolay", medium: "Orta", hard: "Zor",
-    selectCell: "Bir kare seç",
-    puzzleInfo: "1'den 8'e kadar sayıları sırala ve boş alanı sona bırak.",
-    imageQuestion: "Hangi resim güneş?",
-    sun: "Güneş", moon: "Ay", star: "Yıldız",
-    kickQuestion: "Vuruş yönünü seç!",
-    left: "Sol", center: "Orta", right: "Sağ",
-    helpText: "Oyun oyna, coin ve XP kazan, rekorunu geliştir. İlerlemen bu cihazda saklanır.",
-    profileText: "Oyun istatistiklerin",
-    noMoves: "Hamle kalmadı!",
-    next: "Sonraki", tap: "Dokun",
-    correctAnswer: "Doğru cevap!",
-    wrongAnswer: "Bir dahaki sefere tekrar dene!",
-    alreadyPlayed: "Bu turu zaten tamamladın.",
-    levelUp: "Seviye atladın!",
-    gameOver: "Oyun bitti",
-    nineBoards: "Büyük oyunu kazanmak için üç küçük tahtayı sırayla kazan."
-  },
+  const $ = (selector) => document.querySelector(selector);
+  const $$ = (selector) => [...document.querySelectorAll(selector)];
 
-  es: {
-    tagline: "ENTRA AL MUNDO DE LOS JUEGOS", language: "Idioma",
-    level: "Nivel", xp: "XP", games: "Juegos",
-    choose: "¡Elige un juego y comienza!", gameCount: "7 juegos",
-    tic: "Tres en Raya Ultimate", ticSub: "Contra IA o dos jugadores",
-    puzzle: "Zona de Puzzles", puzzleSub: "3 juegos de ingenio",
-    aim: "Reto de puntería", aimSub: "Pon a prueba tus reflejos",
-    car: "Carrera rápida", carSub: "Completa 10 movimientos",
-    jump: "Reto de salto", jumpSub: "Llega a la meta",
-    image: "Quiz de imágenes", imageSub: "¿Qué ves?",
-    football: "Penalti", footballSub: "Vence al portero",
-    wins: "Victorias", played: "Jugadas", best: "Mejor puntuación",
-    home: "Inicio", profile: "Perfil", help: "Ayuda",
-    close: "Cerrar", start: "Empezar", restart: "Jugar otra vez",
-    score: "Puntuación", moves: "Movimientos", time: "Tiempo",
-    shuffle: "Mezclar", congratulations: "¡Felicidades!",
-    correct: "¡Correcto!", wrong: "¡No exactamente!", finished: "¡Juego terminado!",
-    coinsEarned: "Monedas ganadas", tapTarget: "¡Toca el objetivo!",
-    tapToMove: "Toca para avanzar", finish: "¡Meta!",
-    goal: "¡Gol!", saved: "Progreso guardado",
-    yourTurn: "Tu turno", aiTurn: "Turno de la computadora",
-    player: "Jugador", draw: "¡Empate!",
-    won: "¡Has ganado!", lost: "¡Has perdido!",
-    chooseMode: "Elige el modo de juego",
-    solo: "Contra la computadora", two: "Dos jugadores",
-    easy: "Fácil", medium: "Medio", hard: "Difícil",
-    selectCell: "Elige una casilla",
-    puzzleInfo: "Ordena los números del 1 al 8 y deja el espacio vacío al final.",
-    imageQuestion: "¿Cuál imagen es el sol?",
-    sun: "Sol", moon: "Luna", star: "Estrella",
-    kickQuestion: "¡Elige la dirección del tiro!",
-    left: "Izquierda", center: "Centro", right: "Derecha",
-    helpText: "Juega, gana monedas y XP, y mejora tu récord. Tu progreso se guarda en este dispositivo.",
-    profileText: "Tus estadísticas de juego",
-    noMoves: "¡No quedan movimientos!",
-    next: "Siguiente", tap: "Tocar",
-    correctAnswer: "¡Respuesta correcta!",
-    wrongAnswer: "¡Inténtalo de nuevo la próxima vez!",
-    alreadyPlayed: "Ya has completado esta ronda.",
-    levelUp: "¡Subiste de nivel!",
-    gameOver: "Fin del juego",
-    nineBoards: "Gana tres tableros pequeños seguidos para ganar el juego grande."
-  }
-};
-
-let currentLang = "en";
-let currentGame = null;
-let gameTimer = null;
-let gameData = {};
-
-let data = {
-  coins: 120,
-  xp: 0,
-  wins: 0,
-  played: 0,
-  best: 0
-};
-
-const $ = id => document.getElementById(id);
-
-function t(key) {
-  return translations[currentLang]?.[key] || translations.en[key] || key;
-}
-
-function loadSavedData() {
-  try {
-    const saved = JSON.parse(localStorage.getItem("glData") || "null");
-    if (saved && typeof saved === "object") {
-      data = { ...data, ...saved };
-    }
-  } catch (error) {
-    console.warn("Could not load saved game data:", error);
-  }
-
-  try {
-    const savedLang = localStorage.getItem("gvLang");
-    if (translations[savedLang]) currentLang = savedLang;
-  } catch (error) {
-    console.warn("Could not load language preference:", error);
-  }
-}
-
-function saveData() {
-  try {
-    localStorage.setItem("glData", JSON.stringify(data));
-  } catch (error) {
-    console.warn("Could not save saved game data:", error);
-  }
-}
-
-function saveLanguage() {
-  try {
-    localStorage.setItem("gvLang", currentLang);
-  } catch (error) {
-    console.warn("Could not save language:", error);
-  }
-}
-
-function applyLanguage() {
-  const rtl = currentLang === "fa" || currentLang === "ar";
-
-  document.documentElement.lang = currentLang;
-  document.documentElement.dir = rtl ? "rtl" : "ltr";
-
-  document.querySelectorAll("[data-i18n]").forEach(element => {
-    const key = element.dataset.i18n;
-
-    if (translations[currentLang][key]) {
-      element.textContent = translations[currentLang][key];
-    }
-  });
-
-  $("language").value = currentLang;
-  updateUI();
-}
-
-function setLanguage(lang) {
-  if (!translations[lang]) return;
-
-  currentLang = lang;
-  saveLanguage();
-  applyLanguage();
-
-  if (currentGame) {
-    const game = currentGame;
-    openGame(game);
-  }
-}
-
-function updateUI() {
-  $("coins").textContent = data.coins;
-  $("xp").textContent = data.xp;
-  $("wins").textContent = data.wins;
-  $("played").textContent = data.played;
-  $("best").textContent = data.best;
-
-  const level = Math.floor(data.xp / 100) + 1;
-  $("level").textContent = level;
-  $("xpbar").style.width = `${data.xp % 100}%`;
-
-  const tg = window.Telegram?.WebApp;
-  const name = tg?.initDataUnsafe?.user?.first_name;
-
-  $("username").textContent = name || "Player";
-}
-
-function addReward(coins, xp, won = false) {
-  data.coins += coins;
-  data.xp += xp;
-
-  if (won) data.wins++;
-
-  saveData();
-  updateUI();
-}
-
-function recordGame(score = 0) {
-  data.played++;
-  data.best = Math.max(data.best, score);
-
-  saveData();
-  updateUI();
-}
-
-function closeGame() {
-  if (gameTimer) {
-    clearInterval(gameTimer);
-    clearTimeout(gameTimer);
-  }
-
-  gameTimer = null;
-  currentGame = null;
-
-  $("modal").classList.add("hidden");
-  $("gameArea").innerHTML = "";
-}
-
-function showGame(title, html) {
-  $("gameTitle").textContent = title;
-  $("gameArea").innerHTML = html;
-  $("modal").classList.remove("hidden");
-}
-
-function openGame(game) {
-  closeGame();
-  currentGame = game;
-  gameData = {};
-
-  if (game === "tic") return openTic();
-  if (game === "puzzle") return openPuzzle();
-  if (game === "aim") return openAim();
-  if (game === "car") return openTapGame("car", 10);
-  if (game === "jump") return openTapGame("jump", 10);
-  if (game === "image") return openImageQuiz();
-  if (game === "football") return openFootball();
-}
-
-function getTicStats() {
-  const defaults = {
-    matches: 0,
-    championships: 0,
-    losses: 0,
-    draws: 0,
-    currentStreak: 0,
-    bestStreak: 0
+  const STORAGE = {
+    stats: "gameverse_stats_v1",
+    language: "gameverse_language_v1",
+    best2048: "gameverse_2048_best_v1"
   };
 
-  try {
-    return {
-      ...defaults,
-      ...JSON.parse(localStorage.getItem("gvTicStats") || "{}")
-    };
-  } catch {
-    return defaults;
-  }
-}
-
-function saveTicStats(stats) {
-  try {
-    localStorage.setItem("gvTicStats", JSON.stringify(stats));
-  } catch (error) {
-    console.warn("Could not save Tic-Tac-Toe statistics:", error);
-  }
-}
-function openTic() {
-  showGame(t("tic"), `
-    <p class="muted">${t("nineBoards")}</p>
-
-    <div class="tic-toolbar">
-      <button class="choice" id="solo">${t("solo")}</button>
-      <button class="choice" id="two">${t("two")}</button>
-    </div>
-
-    <div id="difficultyArea" class="tic-toolbar hidden">
-      <button class="choice" data-difficulty="easy">${t("easy")}</button>
-      <button class="choice" data-difficulty="medium">${t("medium")}</button>
-      <button class="choice" data-difficulty="hard">${t("hard")}</button>
-    </div>
-
-    <div class="tic-info">
-      <p class="muted" id="ticMatchInfo"></p>
-      <p class="muted" id="ticStatsInfo"></p>
-      <p class="muted" id="ticStatus">${t("chooseMode")}</p>
-      <p class="muted" id="ticBoardInfo"></p>
-    </div>
-
-    <div id="ultimateBoard" class="ultimate-board"></div>
-    <div class="tic-toolbar" id="ticMatchActions"></div>
-  `);
-
-  gameData.mode = null;
-  gameData.difficulty = "medium";
-  gameData.ticMatch = {
-    xWins: 0,
-    oWins: 0,
-    draws: 0,
-    round: 1,
-    completed: false
+  const defaultStats = {
+    played: 0,
+    best: 0,
+    coins: 0
   };
 
-  updateTicStatsDisplay();
-
-  $("solo").onclick = () => {
-    gameData.mode = "solo";
-    $("difficultyArea").classList.remove("hidden");
-    $("ticStatus").textContent = t("chooseMode");
-  };
-
-  $("two").onclick = () => {
-    gameData.mode = "two";
-    startTic();
-  };
-
-  document.querySelectorAll("[data-difficulty]").forEach(button => {
-    button.onclick = () => {
-      if (gameData.mode !== "solo") return;
-      gameData.difficulty = button.dataset.difficulty;
-      startTic();
-    };
-  });
-}
-
-function updateTicStatsDisplay() {
-  const stats = getTicStats();
-  const element = $("ticStatsInfo");
-
-  if (!element) return;
-
-  element.textContent =
-    `🏆 ${stats.championships}  |  ❌ ${stats.losses}  |  🤝 ${stats.draws}  |  🔥 ${stats.bestStreak}`;
-}
-
-function updateTicMatchDisplay() {
-  const match = gameData.ticMatch;
-  const element = $("ticMatchInfo");
-
-  if (!element || !match) return;
-
-  element.textContent =
-    `ROUND ${Math.min(match.round, 3)}/3   |   X: ${match.xWins}   O: ${match.oWins}   Draw: ${match.draws}`;
-}
-
-function startTic() {
-  gameData.boards = Array.from({ length: 9 }, () => Array(9).fill(""));
-  gameData.wonBoards = Array(9).fill("");
-  gameData.player = "X";
-  gameData.activeBoard = -1;
-  gameData.finished = false;
-  gameData.rewarded = false;
-  gameData.lastMove = null;
-
-  clearTimeout(gameTimer);
-  gameTimer = null;
-
-  $("difficultyArea").classList.add("hidden");
-  $("ticMatchActions").innerHTML = "";
-
-  updateTicMatchDisplay();
-  drawTic();
-}
-
-function ticWinner(board) {
-  const lines = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6]
-  ];
-
-  for (const [a, b, c] of lines) {
-    if (
-      (board[a] === "X" || board[a] === "O") &&
-      board[a] === board[b] &&
-      board[b] === board[c]
-    ) {
-      return board[a];
-    }
-  }
-
-  return "";
-}
-
-function ticBoardResolved(index) {
-  return Boolean(gameData.wonBoards[index]) ||
-    gameData.boards[index].every(Boolean);
-}
-
-function ticOverallWinner() {
-  const result = ticWinner(gameData.wonBoards);
-  if (result) return result;
-
-  const allResolved = gameData.boards.every((board, index) =>
-    ticBoardResolved(index)
-  );
-
-  return allResolved ? "draw" : "";
-}
-
-function getTicAllowedBoards() {
-  if (
-    gameData.activeBoard >= 0 &&
-    !ticBoardResolved(gameData.activeBoard)
-  ) {
-    return [gameData.activeBoard];
-  }
-
-  return gameData.boards
-    .map((board, index) =>
-      ticBoardResolved(index) ? -1 : index
-    )
-    .filter(index => index >= 0);
-}
-
-function drawTic() {
-  const boardElement = $("ultimateBoard");
-  if (!boardElement) return;
-
-  boardElement.innerHTML = "";
-
-  const allowedBoards = getTicAllowedBoards();
-
-  gameData.boards.forEach((board, boardIndex) => {
-    const small = document.createElement("div");
-    small.className = "mini-board";
-
-    if (
-      !gameData.finished &&
-      allowedBoards.includes(boardIndex)
-    ) {
-      small.classList.add("active");
-    }
-
-    if (gameData.wonBoards[boardIndex]) {
-      small.classList.add("won");
-    }
-
-    const grid = document.createElement("div");
-    grid.className = "mini-grid";
-
-    board.forEach((value, cellIndex) => {
-      const button = document.createElement("button");
-      button.className = "mini-cell";
-      button.textContent = value || "";
-
-      if (value) {
-        button.classList.add(value === "X" ? "tic-x" : "tic-o");
-      }
-
-      if (
-        gameData.lastMove &&
-        gameData.lastMove.boardIndex === boardIndex &&
-        gameData.lastMove.cellIndex === cellIndex
-      ) {
-        button.classList.add("last-move");
-      }
-
-      const allowed =
-        !gameData.finished &&
-        !gameData.wonBoards[boardIndex] &&
-        !value &&
-        allowedBoards.includes(boardIndex) &&
-        !(gameData.mode === "solo" && gameData.player === "O");
-
-      button.disabled = !allowed;
-      button.onclick = () => playTic(boardIndex, cellIndex);
-
-      grid.appendChild(button);
-    });
-
-    if (gameData.wonBoards[boardIndex]) {
-      const label = document.createElement("div");
-      label.className = "tic-board-winner";
-      label.textContent = gameData.wonBoards[boardIndex] === "D"
-        ? "—"
-        : gameData.wonBoards[boardIndex];
-      small.appendChild(label);
-    } else if (board.every(Boolean)) {
-      const label = document.createElement("div");
-      label.className = "tic-board-winner";
-      label.textContent = "—";
-      small.appendChild(label);
-    }
-
-    small.appendChild(grid);
-    boardElement.appendChild(small);
-  });
-
-  updateTicMatchDisplay();
-
-  const status = $("ticStatus");
-  const boardInfo = $("ticBoardInfo");
-
-  if (gameData.finished) {
-    const match = gameData.ticMatch;
-
-    if (match?.completed) {
-      status.textContent =
-        match.xWins > match.oWins
-          ? "🏆 YOU WON THE MATCH!"
-          : match.oWins > match.xWins
-            ? "💔 MATCH LOST!"
-            : "🤝 MATCH DRAW!";
-
-      boardInfo.textContent =
-        `Final Score: X ${match.xWins} - O ${match.oWins}`;
-    } else {
-      const result = ticOverallWinner();
-
-      status.textContent =
-        result === "X" ? t("won") :
-        result === "O" ? t("lost") :
-        t("draw");
-
-      boardInfo.textContent = t("gameOver");
-    }
-  } else {
-    status.textContent =
-      gameData.player === "X" ? t("yourTurn") : t("aiTurn");
-
-    boardInfo.textContent =
-      gameData.activeBoard === -1 ||
-      ticBoardResolved(gameData.activeBoard)
-        ? t("selectCell")
-        : `${t("selectCell")} ${gameData.activeBoard + 1}`;
-  }
-}
-
-function playTic(boardIndex, cellIndex) {
-  if (gameData.finished) return;
-  if (gameData.ticMatch.completed) return;
-
-  if (gameData.mode === "solo" && gameData.player === "O") return;
-  if (ticBoardResolved(boardIndex)) return;
-
-  if (
-    gameData.activeBoard !== -1 &&
-    !ticBoardResolved(gameData.activeBoard) &&
-    gameData.activeBoard !== boardIndex
-  ) return;
-
-  if (gameData.boards[boardIndex][cellIndex]) return;
-
-  applyTicMove(boardIndex, cellIndex);
-
-  if (
-    !gameData.finished &&
-    gameData.mode === "solo" &&
-    gameData.player === "O"
-  ) {
-    gameTimer = setTimeout(computerMove, 500);
-  }
-}
-
-function applyTicMove(boardIndex, cellIndex) {
-  const player = gameData.player;
-  gameData.boards[boardIndex][cellIndex] = player;
-  gameData.lastMove = { boardIndex, cellIndex };
-
-  const localResult = ticWinner(gameData.boards[boardIndex]);
-
-  if (localResult) {
-    gameData.wonBoards[boardIndex] = localResult;
-  } else if (gameData.boards[boardIndex].every(Boolean)) {
-    gameData.wonBoards[boardIndex] = "D";
-  }
-
-  const overallResult = ticOverallWinner();
-
-  if (overallResult) {
-    finishTic(overallResult);
-    return;
-  }
-
-  const nextBoard = cellIndex;
-  gameData.activeBoard = ticBoardResolved(nextBoard)
-    ? -1
-    : nextBoard;
-
-  gameData.player = player === "X" ? "O" : "X";
-
-  drawTic();
-}
-
-function getWinningCell(board, player) {
-  for (let i = 0; i < 9; i++) {
-    if (board[i]) continue;
-
-    const copy = [...board];
-    copy[i] = player;
-
-    if (ticWinner(copy) === player) {
-      return i;
-    }
-  }
-
-  return -1;
-}
-
-function computerMove() {
-  if (
-    gameData.finished ||
-    currentGame !== "tic" ||
-    gameData.player !== "O"
-  ) return;
-
-  const possibleBoards = getTicAllowedBoards();
-  const moves = [];
-
-  possibleBoards.forEach(boardIndex => {
-    gameData.boards[boardIndex].forEach((value, cellIndex) => {
-      if (!value) {
-        moves.push({ boardIndex, cellIndex });
-      }
-    });
-  });
-
-  if (!moves.length) {
-    const result = ticOverallWinner();
-    if (result) finishTic(result);
-    return;
-  }
-
-  let selectedMove;
-
-  if (gameData.difficulty === "easy") {
-    selectedMove = moves[Math.floor(Math.random() * moves.length)];
-  } else {
-    selectedMove = chooseSmartMove(moves, gameData.difficulty);
-  }
-
-  applyTicMove(selectedMove.boardIndex, selectedMove.cellIndex);
-}
-
-function chooseSmartMove(moves, difficulty) {
-  let bestMove = moves[0];
-  let bestScore = -Infinity;
-
-  for (const move of moves) {
-    const board = gameData.boards[move.boardIndex];
-    const copy = [...board];
-
-    copy[move.cellIndex] = "O";
-    let score = Math.random() * 2;
-
-    if (ticWinner(copy) === "O") {
-      score += 10000;
-    }
-
-    const opponentThreat = getWinningCell(board, "X");
-
-    if (
-      opponentThreat !== -1 &&
-      opponentThreat === move.cellIndex
-    ) {
-      score += 4000;
-    }
-
-    if (move.cellIndex === 4) score += 35;
-    if ([0, 2, 6, 8].includes(move.cellIndex)) score += 18;
-
-    if (difficulty === "hard") {
-      const nextBoard = gameData.boards[move.cellIndex];
-
-      if (
-        nextBoard &&
-        !ticBoardResolved(move.cellIndex)
-      ) {
-        const oThreat = getWinningCell(nextBoard, "O");
-        const xThreat = getWinningCell(nextBoard, "X");
-
-        if (oThreat !== -1) score += 45;
-        if (xThreat !== -1) score -= 20;
-      }
-
-      const simulatedMeta = [...gameData.wonBoards];
-
-      if (ticWinner(copy) === "O") {
-        simulatedMeta[move.boardIndex] = "O";
-
-        if (ticWinner(simulatedMeta) === "O") {
-          score += 20000;
-        }
-      }
-    }
-
-    if (score > bestScore) {
-      bestScore = score;
-      bestMove = move;
-    }
-  }
-
-  return bestMove;
-}
-
-function finishTic(result) {
-  if (gameData.finished) return;
-
-  gameData.finished = true;
-
-  if (!gameData.rewarded) {
-    gameData.rewarded = true;
-
-    recordGame(result === "X" ? 1 : 0);
-
-    if (result === "X") {
-      addReward(20, 30, true);
-    } else if (result === "O") {
-      if (gameData.mode === "two") {
-        addReward(10, 15, false);
-      }
-    } else {
-      addReward(5, 10, false);
-    }
-  }
-
-  const match = gameData.ticMatch;
-
-  if (result === "X") match.xWins++;
-  else if (result === "O") match.oWins++;
-  else match.draws++;
-
-  const matchFinished =
-    match.xWins === 2 ||
-    match.oWins === 2 ||
-    match.round === 3;
-
-  if (matchFinished) {
-    finishTicMatch();
-  } else {
-    const actions = $("ticMatchActions");
-
-    if (actions) {
-      const nextButton = document.createElement("button");
-      nextButton.className = "action";
-      nextButton.textContent = "▶ Next Round";
-
-      nextButton.onclick = () => {
-        match.round++;
-        startTic();
-      };
-
-      actions.innerHTML = "";
-      actions.appendChild(nextButton);
-    }
-  }
-
-  drawTic();
-}
-
-function finishTicMatch() {
-  const match = gameData.ticMatch;
-  if (match.completed) return;
-
-  match.completed = true;
-
-  const stats = getTicStats();
-  stats.matches++;
-
-  if (match.xWins > match.oWins) {
-    stats.championships++;
-    stats.currentStreak++;
-    stats.bestStreak = Math.max(
-      stats.bestStreak,
-      stats.currentStreak
-    );
-  } else if (match.oWins > match.xWins) {
-    stats.losses++;
-    stats.currentStreak = 0;
-  } else {
-    stats.draws++;
-    stats.currentStreak = 0;
-  }
-
-  saveTicStats(stats);
-  updateTicStatsDisplay();
-
-  const actions = $("ticMatchActions");
-
-  if (actions) {
-    const again = document.createElement("button");
-    again.className = "action";
-    again.textContent = "🏆 New Match";
-
-    again.onclick = () => {
-      gameData.ticMatch = {
-        xWins: 0,
-        oWins: 0,
-        draws: 0,
-        round: 1,
-        completed: false
-      };
-
-      startTic();
-    };
-
-    actions.innerHTML = "";
-    actions.appendChild(again);
-  }
-}
-/* =========================================================
-   GAMEVERSE PUZZLE ZONE
-   Match-3 + Picture Puzzle + 2048
-   3000 stages / 60 chapters
-========================================================= */
-
-const PZ_TOTAL_STAGES = 3000;
-const PZ_STAGES_PER_CHAPTER = 50;
-const PZ_STORAGE_KEY = "gvPuzzleZone_v2";
-
-const PZ_CHAPTERS = [
-  "Crystal Valley", "Neon Garden", "Frozen Kingdom",
-  "Solar Desert", "Mystic Forest", "Ocean Palace",
-  "Moonlight City", "Dragon Peaks", "Golden Temple",
-  "Shadow Realm", "Starfall Islands", "Cosmic Horizon"
-];
-
-const PZ_GEMS = [
-  "ruby", "sapphire", "emerald", "topaz", "amethyst", "citrine"
-];
-
-const PZ_GEM_SYMBOLS = {
-  ruby: "◆",
-  sapphire: "◆",
-  emerald: "◆",
-  topaz: "◆",
-  amethyst: "◆",
-  citrine: "◆"
-};
-
-const PZ_PICTURE_ART = [
-  {
-    name: "Aurora",
-    colors: ["#102b55", "#236a91", "#75d6d0", "#e7f7d4"],
-    symbol: "✦"
-  },
-  {
-    name: "Ember",
-    colors: ["#391b38", "#8e3154", "#f0784d", "#ffd17b"],
-    symbol: "✧"
-  },
-  {
-    name: "Forest",
-    colors: ["#123d36", "#26765a", "#8dbb6b", "#e0d69a"],
-    symbol: "❋"
-  },
-  {
-    name: "Cosmos",
-    colors: ["#171a46", "#443c8d", "#9877c9", "#d5c7ff"],
-    symbol: "✦"
-  },
-  {
-    name: "Ocean",
-    colors: ["#062f4f", "#087e9c", "#42c6c5", "#c5f3e9"],
-    symbol: "≈"
-  },
-  {
-    name: "Desert",
-    colors: ["#53304a", "#a65355", "#e49a61", "#f8d69a"],
-    symbol: "☼"
-  }
-];
-
-let pzData = pzLoad();
-
-function pzLoad() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(PZ_STORAGE_KEY) || "{}");
-    return {
-      unlocked: Math.max(1, Math.min(PZ_TOTAL_STAGES, Number(saved.unlocked) || 1)),
-      completed: Array.isArray(saved.completed) ? saved.completed : [],
-      best2048: Math.max(0, Number(saved.best2048) || 0),
-      pictureBest: saved.pictureBest || {}
-    };
-  } catch (error) {
-    return {
-      unlocked: 1,
-      completed: [],
-      best2048: 0,
-      pictureBest: {}
-    };
-  }
-}
-
-function pzSave() {
-  try {
-    localStorage.setItem(PZ_STORAGE_KEY, JSON.stringify(pzData));
-  } catch (error) {
-    console.warn("Puzzle Zone save unavailable:", error);
-  }
-}
-
-function pzText(key, fallback) {
-  const lang = typeof currentLang !== "undefined" ? currentLang : "en";
-  const dictionary = {
+  let stats = loadJSON(STORAGE.stats, defaultStats);
+  let language = localStorage.getItem(STORAGE.language) || "en";
+  let currentGame = null;
+  let gameCleanup = null;
+  let gameTimer = null;
+
+  const translations = {
     en: {
-      puzzleZone: "Puzzle Zone",
+      welcome: "Welcome to GameVerse",
+      subtitle: "Choose a game and have fun!",
+      played: "Games played",
+      best: "Best score",
+      coins: "Coins",
+      home: "Home",
+      profile: "Profile",
+      help: "Help",
+      profileTitle: "Your profile",
+      helpTitle: "How to play",
+      helpText: "Choose any game card to start playing. Your progress and coins are saved on this device.",
+      puzzle: "Puzzle Zone",
+      puzzleDesc: "Train your brain with puzzles",
+      tic: "Tic Tac Toe",
+      ticDesc: "Challenge yourself",
+      aim: "Aim Trainer",
+      aimDesc: "Test your reaction",
+      car: "Car Dodge",
+      carDesc: "Avoid the obstacles",
+      jump: "Jump Game",
+      jumpDesc: "Jump over the blocks",
+      image: "Picture Quiz",
+      imageDesc: "Test your visual memory",
+      football: "Penalty Kick",
+      footballDesc: "Try to score a goal",
+      choosePuzzle: "Choose a puzzle",
       match3: "Crystal Match",
-      picture: "Picture Puzzle",
+      match3Desc: "Match three or more crystals",
       game2048: "2048",
-      play: "Play",
-      back: "Back",
-      stage: "Stage",
-      chapter: "Chapter",
-      moves: "Moves",
+      game2048Desc: "Combine tiles to reach 2048",
+      picturePuzzle: "Picture Puzzle",
+      picturePuzzleDesc: "Put the picture back together",
       score: "Score",
-      target: "Target",
-      best: "Best",
-      completed: "Completed",
-      locked: "Locked",
-      win: "Level Complete!",
-      lose: "Try Again",
-      next: "Next Stage",
-      retry: "Retry",
-      home: "Puzzle Home",
-      choosePicture: "Choose a picture",
-      difficulty: "Difficulty",
+      moves: "Moves",
+      time: "Time",
+      restart: "Restart",
+      close: "Close",
+      youWin: "You win!",
+      gameOver: "Game over!",
+      yourTurn: "Your turn",
+      playerX: "Player X",
+      playerO: "Player O",
+      draw: "It's a draw!",
+      targetHit: "Great shot!",
+      tapToStart: "Tap to start",
+      tapToJump: "Tap to jump",
+      shoot: "Shoot!",
+      goal: "GOAL!",
+      saved: "Progress saved",
+      coinsEarned: "Coins earned",
+      stage: "Stage",
+      bestScore: "Best score",
+      newGame: "New game",
       easy: "Easy",
       medium: "Medium",
       hard: "Hard",
       preview: "Preview",
-      hidePreview: "Hide Preview",
-      pictureMoves: "Moves",
-      pictureSolved: "Picture completed!",
-      continue: "Continue",
-      newGame: "New Game",
-      reached2048: "2048 reached!",
-      gameOver: "No more moves",
-      shuffle: "No moves — board shuffled",
-      world: "World",
-      stages: "Stages"
+      congratulations: "Congratulations!",
+      tryAgain: "Try again",
+      instructions: "Use the controls or your keyboard to play.",
+      noMoves: "No more moves! Starting a new board.",
+      correct: "Correct!",
+      wrong: "Not quite. Try again!",
+      start: "Start",
+      language: "Language"
     },
     fa: {
-      puzzleZone: "منطقه معما",
+      welcome: "به گیم‌ورس خوش آمدی",
+      subtitle: "یک بازی انتخاب کن و لذت ببر!",
+      played: "بازی‌های انجام‌شده",
+      best: "بهترین امتیاز",
+      coins: "سکه‌ها",
+      home: "خانه",
+      profile: "پروفایل",
+      help: "راهنما",
+      profileTitle: "پروفایل شما",
+      helpTitle: "راهنمای بازی",
+      helpText: "برای شروع، یکی از کارت‌های بازی را انتخاب کن. پیشرفت و سکه‌ها روی همین دستگاه ذخیره می‌شوند.",
+      puzzle: "منطقه پازل",
+      puzzleDesc: "با پازل‌ها ذهنت را به چالش بکش",
+      tic: "دوز",
+      ticDesc: "خودت را به چالش بکش",
+      aim: "تمرین نشانه‌گیری",
+      aimDesc: "سرعت واکنشت را بسنج",
+      car: "فرار با ماشین",
+      carDesc: "از موانع دوری کن",
+      jump: "بازی پرش",
+      jumpDesc: "از روی موانع بپر",
+      image: "آزمون تصویر",
+      imageDesc: "حافظه تصویری‌ات را امتحان کن",
+      football: "ضربه پنالتی",
+      footballDesc: "گل بزن!",
+      choosePuzzle: "یک پازل انتخاب کن",
       match3: "جورچین کریستالی",
-      picture: "پازل تصویری",
+      match3Desc: "سه یا چند کریستال مشابه را کنار هم قرار بده",
       game2048: "۲۰۴۸",
-      play: "شروع",
-      back: "بازگشت",
-      stage: "مرحله",
-      chapter: "فصل",
-      moves: "حرکت",
+      game2048Desc: "خانه‌ها را ترکیب کن تا به ۲۰۴۸ برسی",
+      picturePuzzle: "پازل تصویری",
+      picturePuzzleDesc: "تصویر را دوباره مرتب کن",
       score: "امتیاز",
-      target: "هدف",
-      best: "بهترین",
-      completed: "تکمیل‌شده",
-      locked: "قفل",
-      win: "مرحله کامل شد!",
-      lose: "دوباره تلاش کن",
-      next: "مرحله بعد",
-      retry: "تلاش دوباره",
-      home: "خانه معماها",
-      choosePicture: "یک تصویر انتخاب کن",
-      difficulty: "سختی",
+      moves: "حرکت‌ها",
+      time: "زمان",
+      restart: "شروع دوباره",
+      close: "بستن",
+      youWin: "برنده شدی!",
+      gameOver: "بازی تمام شد!",
+      yourTurn: "نوبت شما",
+      playerX: "بازیکن X",
+      playerO: "بازیکن O",
+      draw: "مساوی شد!",
+      targetHit: "آفرین!",
+      tapToStart: "برای شروع لمس کن",
+      tapToJump: "برای پرش لمس کن",
+      shoot: "شوت کن!",
+      goal: "گل!",
+      saved: "پیشرفت ذخیره شد",
+      coinsEarned: "سکه دریافت کردی",
+      stage: "مرحله",
+      bestScore: "بهترین امتیاز",
+      newGame: "بازی جدید",
       easy: "آسان",
       medium: "متوسط",
       hard: "سخت",
-      preview: "پیش‌نمایش",
-      hidePreview: "بستن پیش‌نمایش",
-      pictureMoves: "حرکت‌ها",
-      pictureSolved: "تصویر کامل شد!",
-      continue: "ادامه",
-      newGame: "بازی جدید",
-      reached2048: "به ۲۰۴۸ رسیدی!",
-      gameOver: "حرکت دیگری وجود ندارد",
-      shuffle: "حرکتی نبود؛ صفحه دوباره چیده شد",
-      world: "جهان",
-      stages: "مرحله‌ها"
+      preview: "نمایش تصویر",
+      congratulations: "تبریک!",
+      tryAgain: "دوباره تلاش کن",
+      instructions: "برای بازی از کنترل‌ها یا صفحه‌کلید استفاده کن.",
+      noMoves: "حرکت دیگری وجود ندارد؛ صفحه جدید ساخته شد.",
+      correct: "درست است!",
+      wrong: "این بار درست نبود؛ دوباره تلاش کن!",
+      start: "شروع",
+      language: "زبان"
     },
     ar: {
-      puzzleZone: "منطقة الألغاز",
-      match3: "مطابقة الكريستال",
-      picture: "لغز الصور",
-      game2048: "2048",
-      play: "ابدأ",
-      back: "رجوع",
-      stage: "مرحلة",
-      chapter: "فصل",
-      moves: "الحركات",
-      score: "النقاط",
-      target: "الهدف",
-      best: "الأفضل",
-      completed: "مكتمل",
-      locked: "مقفل",
-      win: "اكتمل المستوى!",
-      lose: "حاول مرة أخرى",
-      next: "المرحلة التالية",
-      retry: "إعادة",
+      welcome: "مرحباً بك في GameVerse",
+      subtitle: "اختر لعبة واستمتع!",
+      played: "الألعاب التي لعبتها",
+      best: "أفضل نتيجة",
+      coins: "العملات",
       home: "الرئيسية",
-      choosePicture: "اختر صورة",
-      difficulty: "الصعوبة",
+      profile: "الملف الشخصي",
+      help: "المساعدة",
+      profileTitle: "ملفك الشخصي",
+      helpTitle: "كيفية اللعب",
+      helpText: "اختر أي لعبة للبدء. يتم حفظ تقدمك وعملاتك على هذا الجهاز.",
+      puzzle: "منطقة الألغاز",
+      puzzleDesc: "درّب عقلك بالألغاز",
+      tic: "إكس أو",
+      ticDesc: "تحدَّ نفسك",
+      aim: "اختبار التصويب",
+      aimDesc: "اختبر سرعة رد فعلك",
+      car: "تجنب السيارات",
+      carDesc: "تجنب العقبات",
+      jump: "لعبة القفز",
+      jumpDesc: "اقفز فوق الحواجز",
+      image: "اختبار الصور",
+      imageDesc: "اختبر ذاكرتك البصرية",
+      football: "ركلة جزاء",
+      footballDesc: "حاول تسجيل هدف",
+      choosePuzzle: "اختر لغزاً",
+      match3: "مطابقة الكريستال",
+      match3Desc: "طابق ثلاثة بلورات أو أكثر",
+      game2048: "2048",
+      game2048Desc: "ادمج المربعات للوصول إلى 2048",
+      picturePuzzle: "لغز الصورة",
+      picturePuzzleDesc: "رتب الصورة من جديد",
+      score: "النقاط",
+      moves: "الحركات",
+      time: "الوقت",
+      restart: "إعادة",
+      close: "إغلاق",
+      youWin: "لقد فزت!",
+      gameOver: "انتهت اللعبة!",
+      yourTurn: "دورك",
+      playerX: "اللاعب X",
+      playerO: "اللاعب O",
+      draw: "تعادل!",
+      targetHit: "رائع!",
+      tapToStart: "المس للبدء",
+      tapToJump: "المس للقفز",
+      shoot: "سدد!",
+      goal: "هدف!",
+      saved: "تم حفظ التقدم",
+      coinsEarned: "عملات مكتسبة",
+      stage: "المرحلة",
+      bestScore: "أفضل نتيجة",
+      newGame: "لعبة جديدة",
       easy: "سهل",
       medium: "متوسط",
       hard: "صعب",
       preview: "معاينة",
-      hidePreview: "إخفاء المعاينة",
-      pictureMoves: "الحركات",
-      pictureSolved: "اكتملت الصورة!",
-      continue: "متابعة",
-      newGame: "لعبة جديدة",
-      reached2048: "وصلت إلى 2048!",
-      gameOver: "لا توجد حركات",
-      shuffle: "تمت إعادة ترتيب اللوحة",
-      world: "العالم",
-      stages: "المراحل"
+      congratulations: "تهانينا!",
+      tryAgain: "حاول مرة أخرى",
+      instructions: "استخدم الأزرار أو لوحة المفاتيح للعب.",
+      noMoves: "لا توجد حركات أخرى. تم إنشاء لوحة جديدة.",
+      correct: "صحيح!",
+      wrong: "ليس تماماً. حاول مرة أخرى!",
+      start: "ابدأ",
+      language: "اللغة"
     },
     tr: {
-      puzzleZone: "Bulmaca Alanı",
+      welcome: "GameVerse'e hoş geldin",
+      subtitle: "Bir oyun seç ve eğlen!",
+      played: "Oynanan oyunlar",
+      best: "En iyi skor",
+      coins: "Jetonlar",
+      home: "Ana sayfa",
+      profile: "Profil",
+      help: "Yardım",
+      profileTitle: "Profilin",
+      helpTitle: "Nasıl oynanır?",
+      helpText: "Başlamak için bir oyun kartı seç. İlerlemen ve jetonların bu cihazda saklanır.",
+      puzzle: "Bulmaca Bölgesi",
+      puzzleDesc: "Bulmacalarla beynini çalıştır",
+      tic: "XOX",
+      ticDesc: "Kendine meydan oku",
+      aim: "Hedef Antrenmanı",
+      aimDesc: "Tepki hızını test et",
+      car: "Araba Kaçışı",
+      carDesc: "Engellerden kaç",
+      jump: "Zıplama Oyunu",
+      jumpDesc: "Engellerin üzerinden atla",
+      image: "Resim Testi",
+      imageDesc: "Görsel hafızanı test et",
+      football: "Penaltı",
+      footballDesc: "Gol atmaya çalış",
+      choosePuzzle: "Bir bulmaca seç",
       match3: "Kristal Eşleştirme",
-      picture: "Resim Bulmacası",
+      match3Desc: "Üç veya daha fazla kristali eşleştir",
       game2048: "2048",
-      play: "Oyna",
-      back: "Geri",
-      stage: "Seviye",
-      chapter: "Bölüm",
+      game2048Desc: "2048'e ulaşmak için taşları birleştir",
+      picturePuzzle: "Resim Bulmacası",
+      picturePuzzleDesc: "Resmi yeniden düzenle",
+      score: "Skor",
       moves: "Hamle",
-      score: "Puan",
-      target: "Hedef",
-      best: "En iyi",
-      completed: "Tamamlandı",
-      locked: "Kilitli",
-      win: "Seviye tamamlandı!",
-      lose: "Tekrar dene",
-      next: "Sonraki seviye",
-      retry: "Yeniden dene",
-      home: "Bulmaca ana sayfası",
-      choosePicture: "Bir resim seç",
-      difficulty: "Zorluk",
+      time: "Süre",
+      restart: "Yeniden başlat",
+      close: "Kapat",
+      youWin: "Kazandın!",
+      gameOver: "Oyun bitti!",
+      yourTurn: "Sıra sende",
+      playerX: "Oyuncu X",
+      playerO: "Oyuncu O",
+      draw: "Berabere!",
+      targetHit: "Harika!",
+      tapToStart: "Başlamak için dokun",
+      tapToJump: "Zıplamak için dokun",
+      shoot: "Şut çek!",
+      goal: "GOL!",
+      saved: "İlerleme kaydedildi",
+      coinsEarned: "Kazanılan jetonlar",
+      stage: "Seviye",
+      bestScore: "En iyi skor",
+      newGame: "Yeni oyun",
       easy: "Kolay",
       medium: "Orta",
       hard: "Zor",
       preview: "Önizleme",
-      hidePreview: "Önizlemeyi kapat",
-      pictureMoves: "Hamleler",
-      pictureSolved: "Resim tamamlandı!",
-      continue: "Devam",
-      newGame: "Yeni oyun",
-      reached2048: "2048'e ulaştın!",
-      gameOver: "Hamle kalmadı",
-      shuffle: "Tahta yeniden karıştırıldı",
-      world: "Dünya",
-      stages: "Seviyeler"
+      congratulations: "Tebrikler!",
+      tryAgain: "Tekrar dene",
+      instructions: "Oynamak için kontrolleri veya klavyeni kullan.",
+      noMoves: "Hamle kalmadı! Yeni tahta oluşturuldu.",
+      correct: "Doğru!",
+      wrong: "Tam değil. Tekrar dene!",
+      start: "Başla",
+      language: "Dil"
     },
     es: {
-      puzzleZone: "Zona de puzzles",
-      match3: "Cristales",
-      picture: "Rompecabezas",
-      game2048: "2048",
-      play: "Jugar",
-      back: "Volver",
-      stage: "Nivel",
-      chapter: "Capítulo",
-      moves: "Movimientos",
-      score: "Puntos",
-      target: "Objetivo",
-      best: "Récord",
-      completed: "Completado",
-      locked: "Bloqueado",
-      win: "¡Nivel completado!",
-      lose: "Inténtalo de nuevo",
-      next: "Siguiente nivel",
-      retry: "Reintentar",
+      welcome: "Bienvenido a GameVerse",
+      subtitle: "¡Elige un juego y diviértete!",
+      played: "Partidas jugadas",
+      best: "Mejor puntuación",
+      coins: "Monedas",
       home: "Inicio",
-      choosePicture: "Elige una imagen",
-      difficulty: "Dificultad",
+      profile: "Perfil",
+      help: "Ayuda",
+      profileTitle: "Tu perfil",
+      helpTitle: "Cómo jugar",
+      helpText: "Elige una tarjeta para empezar. Tu progreso y tus monedas se guardan en este dispositivo.",
+      puzzle: "Zona de puzzles",
+      puzzleDesc: "Entrena tu mente con puzzles",
+      tic: "Tres en raya",
+      ticDesc: "Ponte a prueba",
+      aim: "Entrenamiento de puntería",
+      aimDesc: "Prueba tus reflejos",
+      car: "Esquiva coches",
+      carDesc: "Evita los obstáculos",
+      jump: "Juego de saltos",
+      jumpDesc: "Salta sobre los bloques",
+      image: "Quiz de imágenes",
+      imageDesc: "Pon a prueba tu memoria visual",
+      football: "Penalti",
+      footballDesc: "Intenta marcar un gol",
+      choosePuzzle: "Elige un puzzle",
+      match3: "Cristales",
+      match3Desc: "Combina tres o más cristales",
+      game2048: "2048",
+      game2048Desc: "Combina fichas para llegar a 2048",
+      picturePuzzle: "Puzzle de imagen",
+      picturePuzzleDesc: "Reconstruye la imagen",
+      score: "Puntuación",
+      moves: "Movimientos",
+      time: "Tiempo",
+      restart: "Reiniciar",
+      close: "Cerrar",
+      youWin: "¡Has ganado!",
+      gameOver: "¡Fin del juego!",
+      yourTurn: "Tu turno",
+      playerX: "Jugador X",
+      playerO: "Jugador O",
+      draw: "¡Empate!",
+      targetHit: "¡Buen tiro!",
+      tapToStart: "Toca para empezar",
+      tapToJump: "Toca para saltar",
+      shoot: "¡Dispara!",
+      goal: "¡GOL!",
+      saved: "Progreso guardado",
+      coinsEarned: "Monedas ganadas",
+      stage: "Nivel",
+      bestScore: "Mejor puntuación",
+      newGame: "Nuevo juego",
       easy: "Fácil",
-      medium: "Media",
+      medium: "Medio",
       hard: "Difícil",
       preview: "Vista previa",
-      hidePreview: "Ocultar vista previa",
-      pictureMoves: "Movimientos",
-      pictureSolved: "¡Imagen completada!",
-      continue: "Continuar",
-      newGame: "Nuevo juego",
-      reached2048: "¡Has llegado a 2048!",
-      gameOver: "No hay más movimientos",
-      shuffle: "Tablero mezclado",
-      world: "Mundo",
-      stages: "Niveles"
+      congratulations: "¡Felicidades!",
+      tryAgain: "Inténtalo de nuevo",
+      instructions: "Usa los controles o el teclado para jugar.",
+      noMoves: "No quedan movimientos. Se creó un nuevo tablero.",
+      correct: "¡Correcto!",
+      wrong: "No exactamente. ¡Inténtalo otra vez!",
+      start: "Empezar",
+      language: "Idioma"
     }
   };
 
-  return (dictionary[lang] && dictionary[lang][key]) || fallback || key;
-}
-
-function pzChapterName(stage) {
-  const chapter = Math.floor((stage - 1) / PZ_STAGES_PER_CHAPTER);
-  const world = Math.floor(chapter / PZ_CHAPTERS.length) + 1;
-  const name = PZ_CHAPTERS[chapter % PZ_CHAPTERS.length];
-  return `${pzText("world", "World")} ${world} · ${name}`;
-}
-
-function pzStageGoal(stage) {
-  return 450 + Math.floor(stage / 100) * 90;
-}
-
-function pzStageMoves(stage) {
-  return Math.max(20, 30 - Math.floor(stage / 250));
-}
-
-function pzGemColor(gem) {
-  return {
-    ruby: "#ff526d",
-    sapphire: "#4f9cff",
-    emerald: "#42d6a0",
-    topaz: "#ffd45a",
-    amethyst: "#b18aff",
-    citrine: "#ff9d4d"
-  }[gem] || "#ffffff";
-}
-
-/* -------------------- MAIN MENU -------------------- */
-
-function openPuzzle() {
-  pzHome();
-}
-
-function pzHome() {
-  currentGame = "puzzle";
-  const completedCount = pzData.completed.length;
-  const progress = Math.round((completedCount / PZ_TOTAL_STAGES) * 100);
-
-  showGame(pzText("puzzleZone", "Puzzle Zone"), `
-    <div class="pz-home">
-      <div class="pz-hero">
-        <div class="pz-hero-orb"></div>
-        <div class="pz-hero-content">
-          <span class="pz-eyebrow">GAMEVERSE ARCADE</span>
-          <h2>${pzText("puzzleZone", "Puzzle Zone")}</h2>
-          <p>${completedCount} / ${PZ_TOTAL_STAGES} ${pzText("completed", "completed")}</p>
-          <div class="pz-progress"><span style="width:${progress}%"></span></div>
-        </div>
-      </div>
-
-      <div class="pz-game-grid">
-        <button class="pz-game-card pz-match-card" onclick="pzMap()">
-          <span class="pz-card-art pz-crystal-art"><i></i><i></i><i></i></span>
-          <span class="pz-card-title">${pzText("match3", "Crystal Match")}</span>
-          <span class="pz-card-sub">${PZ_TOTAL_STAGES} ${pzText("stages", "stages")}</span>
-          <span class="pz-card-action">${pzText("play", "Play")} →</span>
-        </button>
-
-        <button class="pz-game-card pz-picture-card" onclick="pzOpenPicture()">
-          <span class="pz-card-art pz-picture-art"><i>✦</i></span>
-          <span class="pz-card-title">${pzText("picture", "Picture Puzzle")}</span>
-          <span class="pz-card-sub">${pzText("choosePicture", "Choose a picture")}</span>
-          <span class="pz-card-action">${pzText("play", "Play")} →</span>
-        </button>
-
-        <button class="pz-game-card pz-2048-card" onclick="pzOpen2048()">
-          <span class="pz-card-art pz-number-art">2048</span>
-          <span class="pz-card-title">${pzText("game2048", "2048")}</span>
-          <span class="pz-card-sub">${pzText("best", "Best")}: ${pzData.best2048}</span>
-          <span class="pz-card-action">${pzText("play", "Play")} →</span>
-        </button>
-      </div>
-    </div>
-  `);
-}
-
-/* -------------------- STAGE MAP -------------------- */
-
-function pzMap() {
-  currentGame = "puzzle";
-
-  const current = pzData.unlocked;
-  const chapterIndex = Math.floor((current - 1) / PZ_STAGES_PER_CHAPTER);
-  const first = chapterIndex * PZ_STAGES_PER_CHAPTER + 1;
-  const last = Math.min(PZ_TOTAL_STAGES, first + PZ_STAGES_PER_CHAPTER - 1);
-
-  let levels = "";
-
-  for (let stage = first; stage <= last; stage++) {
-    const done = pzData.completed.includes(stage);
-    const locked = stage > pzData.unlocked;
-    const active = stage === pzData.unlocked;
-
-    levels += `
-      <button
-        class="pz-level ${done ? "is-done" : ""} ${active ? "is-current" : ""} ${locked ? "is-locked" : ""}"
-        ${locked ? "disabled" : `onclick="pzStartMatch(${stage})"`}
-        aria-label="${pzText("stage", "Stage")} ${stage}"
-      >
-        ${done ? "✓" : locked ? "•" : stage}
-      </button>
-    `;
-  }
-
-  const progress = Math.round((pzData.completed.length / PZ_TOTAL_STAGES) * 100);
-
-  showGame(pzText("match3", "Crystal Match"), `
-    <div class="pz-map">
-      <div class="pz-map-top">
-        <button class="pz-back" onclick="pzHome()">← ${pzText("back", "Back")}</button>
-        <span>${pzData.completed.length}/${PZ_TOTAL_STAGES}</span>
-      </div>
-
-      <div class="pz-map-heading">
-        <span class="pz-eyebrow">${pzText("chapter", "Chapter")} ${chapterIndex + 1} / 60</span>
-        <h2>${pzChapterName(current)}</h2>
-        <div class="pz-progress"><span style="width:${progress}%"></span></div>
-      </div>
-
-      <div class="pz-level-grid">${levels}</div>
-
-      <div class="pz-map-footer">
-        ${pzText("stage", "Stage")} ${first}–${last}
-      </div>
-    </div>
-  `);
-}
-
-/* -------------------- MATCH 3 -------------------- */
-
-function pzRandomGem() {
-  return PZ_GEMS[Math.floor(Math.random() * PZ_GEMS.length)];
-}
-
-function pzFindMatches(board) {
-  const found = new Set();
-  const rows = board.length;
-  const cols = board[0].length;
-
-  for (let r = 0; r < rows; r++) {
-    let start = 0;
-    while (start < cols) {
-      const gem = board[r][start];
-      if (!gem) {
-        start++;
-        continue;
-      }
-      let end = start + 1;
-      while (end < cols && board[r][end] === gem) end++;
-      if (end - start >= 3) {
-        for (let c = start; c < end; c++) found.add(`${r},${c}`);
-      }
-      start = end;
+  function loadJSON(key, fallback) {
+    try {
+      const value = JSON.parse(localStorage.getItem(key));
+      return value && typeof value === "object" ? value : { ...fallback };
+    } catch {
+      return { ...fallback };
     }
   }
 
-  for (let c = 0; c < cols; c++) {
-    let start = 0;
-    while (start < rows) {
-      const gem = board[start][c];
-      if (!gem) {
-        start++;
-        continue;
+  function saveStats() {
+    localStorage.setItem(STORAGE.stats, JSON.stringify(stats));
+    updateStats();
+  }
+
+  function updateStats() {
+    const played = $("#played");
+    const best = $("#best");
+    const coins = $("#coins");
+
+    if (played) played.textContent = stats.played;
+    if (best) best.textContent = stats.best;
+    if (coins) coins.textContent = stats.coins;
+  }
+
+  function t(key) {
+    return translations[language]?.[key] || translations.en[key] || key;
+  }
+
+  function applyLanguage() {
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === "fa" || language === "ar" ? "rtl" : "ltr";
+
+    $$("[data-i18n]").forEach((element) => {
+      const key = element.dataset.i18n;
+      if (key) element.textContent = t(key);
+    });
+
+    const selector = $("#language");
+    if (selector) selector.value = language;
+
+    updateStats();
+  }
+
+  function awardCoins(amount) {
+    stats.coins += amount;
+    saveStats();
+  }
+
+  function recordGame(score = 0) {
+    stats.played += 1;
+    stats.best = Math.max(Number(stats.best) || 0, Number(score) || 0);
+    saveStats();
+  }
+
+  function stopGame() {
+    if (gameTimer) {
+      clearInterval(gameTimer);
+      gameTimer = null;
+    }
+
+    if (typeof gameCleanup === "function") {
+      gameCleanup();
+    }
+
+    gameCleanup = null;
+    currentGame = null;
+  }
+
+  function showModal(title) {
+    const modal = $("#modal");
+    const titleElement = $("#gameTitle");
+
+    if (titleElement) titleElement.textContent = title;
+    if (modal) modal.classList.remove("hidden");
+  }
+
+  function closeModal() {
+    stopGame();
+    const modal = $("#modal");
+    if (modal) modal.classList.add("hidden");
+  }
+
+  function setGameContent(html) {
+    const area = $("#gameArea");
+    if (area) area.innerHTML = html;
+  }
+
+  function showPage(page) {
+    const home = $("#homeView");
+    const profile = $("#profileView");
+    const help = $("#helpView");
+
+    [home, profile, help].forEach((view) => {
+      if (view) view.classList.add("hidden");
+    });
+
+    const selected = page === "profile" ? profile : page === "help" ? help : home;
+    if (selected) selected.classList.remove("hidden");
+
+    $$(".nav-item").forEach((item) => item.classList.remove("active"));
+    const activeTab = page === "profile" ? $("#profileTab") :
+      page === "help" ? $("#helpTab") : $("#homeTab");
+
+    if (activeTab) activeTab.classList.add("active");
+  }
+
+  // ------------------------------
+  // Navigation and initialization
+  // ------------------------------
+
+  function init() {
+    applyLanguage();
+    updateStats();
+
+    $("#language")?.addEventListener("change", (event) => {
+      language = event.target.value;
+      localStorage.setItem(STORAGE.language, language);
+      applyLanguage();
+    });
+
+    $("#homeTab")?.addEventListener("click", () => showPage("home"));
+    $("#profileTab")?.addEventListener("click", () => showPage("profile"));
+    $("#helpTab")?.addEventListener("click", () => showPage("help"));
+    $("#close")?.addEventListener("click", closeModal);
+
+    $("#modal")?.addEventListener("click", (event) => {
+      if (event.target.id === "modal") closeModal();
+    });
+
+    $$("[data-game]").forEach((card) => {
+      card.addEventListener("click", () => {
+        const game = card.dataset.game;
+        launchGame(game);
+      });
+    });
+
+    document.addEventListener("keydown", handleGlobalKeys);
+
+    if (window.Telegram?.WebApp) {
+      try {
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+      } catch (error) {
+        console.warn("Telegram WebApp initialization:", error);
       }
-      let end = start + 1;
-      while (end < rows && board[end][c] === gem) end++;
-      if (end - start >= 3) {
-        for (let r = start; r < end; r++) found.add(`${r},${c}`);
-      }
-      start = end;
     }
   }
 
-  return [...found].map(pos => pos.split(",").map(Number));
-}
+  function handleGlobalKeys(event) {
+    if (!currentGame) return;
 
-function pzHasValidMove(board) {
-  for (let r = 0; r < 8; r++) {
-    for (let c = 0; c < 8; c++) {
-      if (c < 7) {
-        [board[r][c], board[r][c + 1]] = [board[r][c + 1], board[r][c]];
-        const valid = pzFindMatches(board).length > 0;
-        [board[r][c], board[r][c + 1]] = [board[r][c + 1], board[r][c]];
-        if (valid) return true;
-      }
-      if (r < 7) {
-        [board[r][c], board[r + 1][c]] = [board[r + 1][c], board[r][c]];
-        const valid = pzFindMatches(board).length > 0;
-        [board[r][c], board[r + 1][c]] = [board[r + 1][c], board[r][c]];
-        if (valid) return true;
+    if (currentGame === "2048") {
+      const keys = {
+        ArrowUp: "up",
+        ArrowDown: "down",
+        ArrowLeft: "left",
+        ArrowRight: "right",
+        w: "up",
+        s: "down",
+        a: "left",
+        d: "right"
+      };
+
+      const direction = keys[event.key];
+      if (direction) {
+        event.preventDefault();
+        move2048(direction);
       }
     }
   }
-  return false;
-}
 
-function pzCreateBoard() {
-  let board;
-  let attempts = 0;
+  // ------------------------------
+  // Game launcher
+  // ------------------------------
 
-  do {
-    board = Array.from({ length: 8 }, () => Array(8).fill(null));
+  function launchGame(game) {
+    stopGame();
+
+    if (game === "puzzle") {
+      openPuzzleZone();
+      return;
+    }
+
+    switch (game) {
+      case "tic":
+        startTicTacToe();
+        break;
+      case "aim":
+        startAimTrainer();
+        break;
+      case "car":
+        startCarGame();
+        break;
+      case "jump":
+        startJumpGame();
+        break;
+      case "image":
+        startPictureQuiz();
+        break;
+      case "football":
+        startFootball();
+        break;
+      default:
+        openPuzzleZone();
+    }
+  }
+
+  // ------------------------------
+  // Puzzle Zone
+  // ------------------------------
+
+  function openPuzzleZone() {
+    currentGame = "puzzle";
+    showModal(t("puzzle"));
+
+    setGameContent(`
+      <div class="pz-home-grid">
+        <button class="pz-card" id="openMatch3">
+          <div class="pz-icon">💎</div>
+          <h3>${t("match3")}</h3>
+          <p>${t("match3Desc")}</p>
+        </button>
+        <button class="pz-card" id="open2048">
+          <div class="pz-icon">🔢</div>
+          <h3>${t("game2048")}</h3>
+          <p>${t("game2048Desc")}</p>
+        </button>
+        <button class="pz-card" id="openPicturePuzzle">
+          <div class="pz-icon">🧩</div>
+          <h3>${t("picturePuzzle")}</h3>
+          <p>${t("picturePuzzleDesc")}</p>
+        </button>
+      </div>
+    `);
+
+    $("#openMatch3")?.addEventListener("click", startMatch3);
+    $("#open2048")?.addEventListener("click", start2048);
+    $("#openPicturePuzzle")?.addEventListener("click", startPicturePuzzle);
+  }
+
+  // ------------------------------
+  // 2048
+  // ------------------------------
+
+  let board2048 = [];
+  let score2048 = 0;
+  let best2048 = Number(localStorage.getItem(STORAGE.best2048)) || 0;
+  let won2048 = false;
+  let touchStart2048 = null;
+
+  function start2048() {
+    currentGame = "2048";
+    score2048 = 0;
+    won2048 = false;
+    board2048 = Array.from({ length: 4 }, () => Array(4).fill(0));
+
+    add2048Tile();
+    add2048Tile();
+    render2048();
+  }
+
+  function add2048Tile() {
+    const empty = [];
+
+    for (let r = 0; r < 4; r++) {
+      for (let c = 0; c < 4; c++) {
+        if (board2048[r][c] === 0) empty.push([r, c]);
+      }
+    }
+
+    if (!empty.length) return;
+
+    const [r, c] = empty[Math.floor(Math.random() * empty.length)];
+    board2048[r][c] = Math.random() < 0.9 ? 2 : 4;
+  }
+
+  function render2048() {
+    if (currentGame !== "2048") return;
+
+    const bestText = best2048;
+    setGameContent(`
+      <div class="game-toolbar">
+        <div class="score-box">${t("score")}: <strong id="score2048">${score2048}</strong></div>
+        <div class="score-box">${t("bestScore")}: <strong>${bestText}</strong></div>
+        <button class="game-button" id="restart2048">${t("restart")}</button>
+      </div>
+      <div class="board2048" id="board2048" aria-label="2048 game board">
+        ${board2048.flat().map((value) => `
+          <div class="tile2048 tile-${value || 0}">${value || ""}</div>
+        `).join("")}
+      </div>
+      <p class="game-hint">${t("instructions")}</p>
+      <p class="game-hint">Swipe, use arrow keys, or use WASD.</p>
+    `);
+
+    $("#restart2048")?.addEventListener("click", start2048);
+
+    const board = $("#board2048");
+    if (board) {
+      board.addEventListener("touchstart", (event) => {
+        const touch = event.changedTouches[0];
+        touchStart2048 = { x: touch.clientX, y: touch.clientY };
+      }, { passive: true });
+
+      board.addEventListener("touchend", (event) => {
+        if (!touchStart2048) return;
+
+        const touch = event.changedTouches[0];
+        const dx = touch.clientX - touchStart2048.x;
+        const dy = touch.clientY - touchStart2048.y;
+        touchStart2048 = null;
+
+        if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) return;
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+          move2048(dx > 0 ? "right" : "left");
+        } else {
+          move2048(dy > 0 ? "down" : "up");
+        }
+      }, { passive: true });
+    }
+  }
+
+  function move2048(direction) {
+    if (currentGame !== "2048") return;
+
+    const before = JSON.stringify(board2048);
+    let gained = 0;
+
+    for (let index = 0; index < 4; index++) {
+      let line = [];
+
+      for (let j = 0; j < 4; j++) {
+        const r = direction === "up" ? j :
+          direction === "down" ? 3 - j : index;
+        const c = direction === "left" ? j :
+          direction === "right" ? 3 - j : index;
+
+        line.push(board2048[r][c]);
+      }
+
+      line = line.filter((value) => value !== 0);
+
+      for (let j = 0; j < line.length - 1; j++) {
+        if (line[j] === line[j + 1]) {
+          line[j] *= 2;
+          gained += line[j];
+          line.splice(j + 1, 1);
+        }
+      }
+
+      while (line.length < 4) line.push(0);
+
+      for (let j = 0; j < 4; j++) {
+        const r = direction === "up" ? j :
+          direction === "down" ? 3 - j : index;
+        const c = direction === "left" ? j :
+          direction === "right" ? 3 - j : index;
+
+        board2048[r][c] = line[j];
+      }
+    }
+
+    if (before === JSON.stringify(board2048)) return;
+
+    score2048 += gained;
+
+    if (score2048 > best2048) {
+      best2048 = score2048;
+      localStorage.setItem(STORAGE.best2048, String(best2048));
+    }
+
+    add2048Tile();
+    render2048();
+
+    if (!won2048 && board2048.some((row) => row.includes(2048))) {
+      won2048 = true;
+      awardCoins(20);
+      show2048Message(t("youWin") + " +20 🪙");
+    }
+
+    if (is2048GameOver()) {
+      recordGame(score2048);
+      awardCoins(5);
+      show2048Message(t("gameOver") + " +5 🪙");
+    }
+  }
+
+  function is2048GameOver() {
+    for (let r = 0; r < 4; r++) {
+      for (let c = 0; c < 4; c++) {
+        if (board2048[r][c] === 0) return false;
+        if (r < 3 && board2048[r][c] === board2048[r + 1][c]) return false;
+        if (c < 3 && board2048[r][c] === board2048[r][c + 1]) return false;
+      }
+    }
+    return true;
+  }
+
+  function show2048Message(message) {
+    const area = $("#gameArea");
+    if (!area) return;
+
+    const notice = document.createElement("div");
+    notice.className = "notice";
+    notice.textContent = message;
+    area.appendChild(notice);
+  }
+
+  // ------------------------------
+  // Match 3 Crystal Game
+  // ------------------------------
+
+  const crystalColors = ["💎", "🔷", "🔶", "🟣", "🟢", "🔴"];
+  let matchBoard = [];
+  let matchScore = 0;
+  let matchMoves = 25;
+  let matchStage = 1;
+  let selectedGem = null;
+  let matchBusy = false;
+
+  function createMatchBoard() {
+    matchBoard = Array.from({ length: 8 }, () => Array(8).fill(0));
 
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
-        let gem;
-        let guard = 0;
+        let color;
+        let attempts = 0;
 
         do {
-          gem = pzRandomGem();
-          guard++;
+          color = Math.floor(Math.random() * crystalColors.length);
+          attempts++;
         } while (
-          guard < 30 &&
+          attempts < 20 &&
           (
-            (c >= 2 && board[r][c - 1] === gem && board[r][c - 2] === gem) ||
-            (r >= 2 && board[r - 1][c] === gem && board[r - 2][c] === gem)
+            (c >= 2 && matchBoard[r][c - 1] === color && matchBoard[r][c - 2] === color) ||
+            (r >= 2 && matchBoard[r - 1][c] === color && matchBoard[r - 2][c] === color)
           )
         );
 
-        board[r][c] = gem;
+        matchBoard[r][c] = color;
       }
     }
+  }
 
-    attempts++;
-  } while (attempts < 30 && !pzHasValidMove(board));
+  function startMatch3() {
+    currentGame = "match3";
+    matchScore = 0;
+    matchMoves = 25;
+    selectedGem = null;
+    matchBusy = false;
+    createMatchBoard();
+    renderMatch3();
+  }
 
-  return board;
-}
+  function renderMatch3() {
+    if (currentGame !== "match3") return;
 
-function pzStartMatch(stage) {
-  const level = Math.max(1, Math.min(PZ_TOTAL_STAGES, Number(stage) || 1));
-  if (level > pzData.unlocked) return;
-
-  gameData = {
-    pzMatch: true,
-    stage: level,
-    board: pzCreateBoard(),
-    score: 0,
-    moves: pzStageMoves(level),
-    target: pzStageGoal(level),
-    selected: null,
-    busy: false,
-    finished: false
-  };
-
-  pzDrawMatch();
-}
-
-function pzDrawMatch() {
-  if (!gameData || !gameData.pzMatch) return;
-
-  const g = gameData;
-  currentGame = "puzzle";
-
-  showGame(pzText("match3", "Crystal Match"), `
-    <div class="pz-match">
-      <div class="pz-match-top">
-        <button class="pz-back" onclick="pzMap()">← ${pzText("back", "Back")}</button>
-        <span>${pzText("stage", "Stage")} ${g.stage}</span>
+    setGameContent(`
+      <div class="game-toolbar">
+        <div class="score-box">${t("score")}: <strong>${matchScore}</strong></div>
+        <div class="score-box">${t("moves")}: <strong>${matchMoves}</strong></div>
+        <div class="score-box">${t("stage")}: <strong>${matchStage}</strong></div>
       </div>
-
-      <div class="pz-match-info">
-        <div><small>${pzText("score", "Score")}</small><strong id="pzScore">${g.score}</strong></div>
-        <div><small>${pzText("target", "Target")}</small><strong>${g.target}</strong></div>
-        <div><small>${pzText("moves", "Moves")}</small><strong id="pzMoves">${g.moves}</strong></div>
+      <div class="match-board">
+        ${matchBoard.flatMap((row, r) =>
+          row.map((color, c) => `
+            <button class="gem ${selectedGem?.r === r && selectedGem?.c === c ? "selected" : ""}"
+              data-r="${r}" data-c="${c}" aria-label="Crystal">
+              ${crystalColors[color]}
+            </button>
+          `)
+        ).join("")}
       </div>
+      <button class="game-button" id="restartMatch">${t("restart")}</button>
+      <p class="game-hint">${t("instructions")}</p>
+    `);
 
-      <div class="pz-match-progress"><span id="pzMatchProgress" style="width:${Math.min(100, g.score / g.target * 100)}%"></span></div>
+    $$(".gem").forEach((gem) => {
+      gem.addEventListener("click", () => {
+        selectGem(Number(gem.dataset.r), Number(gem.dataset.c));
+      });
+    });
 
-      <div class="pz-board" id="pzBoard">
-        ${pzRenderBoard()}
-      </div>
-
-      <p class="pz-match-hint">Swap two neighboring crystals to match three or more.</p>
-      <div id="pzMatchMessage" class="pz-message" aria-live="polite"></div>
-    </div>
-  `);
-}
-
-function pzRenderBoard() {
-  const g = gameData;
-  if (!g || !g.board) return "";
-
-  let html = "";
-
-  for (let r = 0; r < 8; r++) {
-    for (let c = 0; c < 8; c++) {
-      const gem = g.board[r][c];
-      const selected = g.selected && g.selected.r === r && g.selected.c === c;
-
-      html += `
-        <button
-          class="pz-gem ${gem ? "gem-" + gem : ""} ${selected ? "selected" : ""}"
-          data-r="${r}"
-          data-c="${c}"
-          onclick="pzSelectGem(${r},${c})"
-          aria-label="${gem || "empty"}"
-          ${g.busy || g.finished ? "disabled" : ""}
-        >
-          <span>${PZ_GEM_SYMBOLS[gem] || ""}</span>
-        </button>
-      `;
-    }
+    $("#restartMatch")?.addEventListener("click", startMatch3);
   }
 
-  return html;
-}
+  function selectGem(r, c) {
+    if (matchBusy || currentGame !== "match3" || matchMoves <= 0) return;
 
-function pzDrawBoardOnly() {
-  const board = document.getElementById("pzBoard");
-  if (board) board.innerHTML = pzRenderBoard();
-}
-
-function pzSelectGem(r, c) {
-  const g = gameData;
-  if (!g || !g.pzMatch || g.busy || g.finished) return;
-
-  if (!g.selected) {
-    g.selected = { r, c };
-    pzDrawBoardOnly();
-    return;
-  }
-
-  const first = g.selected;
-  const distance = Math.abs(first.r - r) + Math.abs(first.c - c);
-
-  if (distance === 0) {
-    g.selected = null;
-    pzDrawBoardOnly();
-    return;
-  }
-
-  if (distance !== 1) {
-    g.selected = { r, c };
-    pzDrawBoardOnly();
-    return;
-  }
-
-  const board = g.board;
-  [board[first.r][first.c], board[r][c]] =
-    [board[r][c], board[first.r][first.c]];
-
-  const matches = pzFindMatches(board);
-
-  if (!matches.length) {
-    [board[first.r][first.c], board[r][c]] =
-      [board[r][c], board[first.r][first.c]];
-    g.selected = null;
-    pzDrawBoardOnly();
-    return;
-  }
-
-  g.selected = null;
-  g.moves--;
-  g.busy = true;
-  pzUpdateMatchStats();
-  pzDrawBoardOnly();
-  pzResolveMatches();
-}
-
-function pzUpdateMatchStats() {
-  const g = gameData;
-  if (!g) return;
-
-  const score = document.getElementById("pzScore");
-  const moves = document.getElementById("pzMoves");
-  const progress = document.getElementById("pzMatchProgress");
-
-  if (score) score.textContent = g.score;
-  if (moves) moves.textContent = g.moves;
-  if (progress) progress.style.width =
-    `${Math.min(100, g.score / g.target * 100)}%`;
-}
-
-function pzResolveMatches() {
-  const g = gameData;
-  if (!g || !g.pzMatch || g.finished) return;
-
-  const matches = pzFindMatches(g.board);
-
-  if (!matches.length) {
-    if (!pzHasValidMove(g.board)) {
-      g.board = pzCreateBoard();
-      const message = document.getElementById("pzMatchMessage");
-      if (message) message.textContent = pzText("shuffle", "Board shuffled");
+    if (!selectedGem) {
+      selectedGem = { r, c };
+      renderMatch3();
+      return;
     }
 
-    g.busy = false;
-    pzDrawBoardOnly();
-    pzUpdateMatchStats();
+    const first = selectedGem;
+    selectedGem = null;
 
-    if (g.score >= g.target) {
-      pzFinishMatch(true);
-    } else if (g.moves <= 0) {
-      pzFinishMatch(false);
+    if (Math.abs(first.r - r) + Math.abs(first.c - c) !== 1) {
+      selectedGem = { r, c };
+      renderMatch3();
+      return;
     }
-    return;
+
+    const temp = matchBoard[first.r][first.c];
+    matchBoard[first.r][first.c] = matchBoard[r][c];
+    matchBoard[r][c] = temp;
+
+    const matches = findMatches();
+
+    if (!matches.length) {
+      const back = matchBoard[first.r][first.c];
+      matchBoard[first.r][first.c] = matchBoard[r][c];
+      matchBoard[r][c] = back;
+      renderMatch3();
+      return;
+    }
+
+    matchMoves--;
+    matchBusy = true;
+    resolveMatches();
   }
 
-  matches.forEach(([r, c]) => {
-    g.board[r][c] = null;
-  });
+  function findMatches() {
+    const found = new Set();
 
-  g.score += matches.length * 20;
-  pzUpdateMatchStats();
-  pzDrawBoardOnly();
+    for (let r = 0; r < 8; r++) {
+      let count = 1;
 
-  gameTimer = setTimeout(() => {
-    if (!gameData || !gameData.pzMatch || gameData.finished) return;
+      for (let c = 1; c <= 8; c++) {
+        if (c < 8 && matchBoard[r][c] === matchBoard[r][c - 1]) {
+          count++;
+        } else {
+          if (count >= 3) {
+            for (let k = c - count; k < c; k++) found.add(`${r},${k}`);
+          }
+          count = 1;
+        }
+      }
+    }
 
     for (let c = 0; c < 8; c++) {
-      const remaining = [];
+      let count = 1;
 
-      for (let r = 7; r >= 0; r--) {
-        if (g.board[r][c]) remaining.push(g.board[r][c]);
+      for (let r = 1; r <= 8; r++) {
+        if (r < 8 && matchBoard[r][c] === matchBoard[r - 1][c]) {
+          count++;
+        } else {
+          if (count >= 3) {
+            for (let k = r - count; k < r; k++) found.add(`${k},${c}`);
+          }
+          count = 1;
+        }
       }
-
-      for (let r = 7; r >= 0; r--) {
-        g.board[r][c] = remaining[7 - r] || pzRandomGem();
-      }
     }
 
-    pzDrawBoardOnly();
-
-    gameTimer = setTimeout(() => {
-      pzResolveMatches();
-    }, 180);
-  }, 180);
-}
-
-function pzFinishMatch(won) {
-  const g = gameData;
-  if (!g || !g.pzMatch || g.finished) return;
-
-  g.finished = true;
-  g.busy = false;
-
-  if (won) {
-    if (!pzData.completed.includes(g.stage)) {
-      pzData.completed.push(g.stage);
-    }
-
-    pzData.unlocked = Math.max(
-      pzData.unlocked,
-      Math.min(PZ_TOTAL_STAGES, g.stage + 1)
-    );
-
-    pzSave();
-
-    if (typeof addReward === "function") {
-      addReward(15 + Math.floor(g.stage / 10), 10 + Math.floor(g.stage / 5));
-    }
-    if (typeof recordGame === "function") recordGame("puzzle");
+    return [...found].map((value) => value.split(",").map(Number));
   }
 
-  const message = won
-    ? pzText("win", "Level Complete!")
-    : pzText("lose", "Try Again");
+  function resolveMatches() {
+    let chain = 0;
 
-  const board = document.getElementById("pzBoard");
-  if (board) {
-    board.insertAdjacentHTML("afterend", `
-      <div class="pz-result">
-        <div class="pz-result-icon">${won ? "✦" : "↻"}</div>
-        <h3>${message}</h3>
-        <p>${pzText("score", "Score")}: ${g.score}</p>
-        <div class="pz-result-actions">
-          <button class="pz-primary" onclick="${won && g.stage < PZ_TOTAL_STAGES ? `pzStartMatch(${g.stage + 1})` : "pzStartMatch(" + g.stage + ")"}">
-            ${won && g.stage < PZ_TOTAL_STAGES ? pzText("next", "Next Stage") : pzText("retry", "Retry")}
+    function step() {
+      const matches = findMatches();
+
+      if (!matches.length) {
+        matchBusy = false;
+        renderMatch3();
+
+        if (matchMoves <= 0) {
+          recordGame(matchScore);
+          awardCoins(Math.max(2, Math.floor(matchScore / 100)));
+          showMatchMessage(t("gameOver"));
+        }
+        return;
+      }
+
+      chain++;
+      matchScore += matches.length * 10 * chain;
+
+      matches.forEach(([r, c]) => {
+        matchBoard[r][c] = -1;
+      });
+
+      for (let c = 0; c < 8; c++) {
+        const remaining = [];
+
+        for (let r = 7; r >= 0; r--) {
+          if (matchBoard[r][c] !== -1) remaining.push(matchBoard[r][c]);
+        }
+
+        while (remaining.length < 8) {
+          remaining.push(Math.floor(Math.random() * crystalColors.length));
+        }
+
+        for (let r = 7; r >= 0; r--) {
+          matchBoard[r][c] = remaining[7 - r];
+        }
+      }
+
+      renderMatch3();
+      gameTimer = setTimeout(step, 120);
+    }
+
+    step();
+  }
+
+  function showMatchMessage(message) {
+    const area = $("#gameArea");
+    if (!area) return;
+
+    const notice = document.createElement("div");
+    notice.className = "notice";
+    notice.textContent = message;
+    area.appendChild(notice);
+  }
+
+  // ------------------------------
+  // Picture Puzzle
+  // ------------------------------
+
+  let pictureOrder = [];
+  let pictureMoves = 0;
+  let pictureSeconds = 0;
+  let pictureSize = 3;
+
+  function startPicturePuzzle() {
+    currentGame = "picturePuzzle";
+    pictureMoves = 0;
+    pictureSeconds = 0;
+    pictureSize = 3;
+    createPicturePuzzle();
+  }
+
+  function createPicturePuzzle() {
+    const count = pictureSize * pictureSize;
+    pictureOrder = Array.from({ length: count }, (_, i) => i);
+    shuffleArray(pictureOrder);
+
+    if (isPictureSolved()) {
+      pictureOrder.reverse();
+    }
+
+    renderPicturePuzzle();
+
+    gameTimer = setInterval(() => {
+      pictureSeconds++;
+      const time = $("#pictureTime");
+      if (time) time.textContent = formatTime(pictureSeconds);
+    }, 1000);
+  }
+
+  function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+  }
+
+  function renderPicturePuzzle() {
+    if (currentGame !== "picturePuzzle") return;
+
+    const count = pictureSize * pictureSize;
+
+    setGameContent(`
+      <div class="game-toolbar">
+        <div class="score-box">${t("moves")}: <strong>${pictureMoves}</strong></div>
+        <div class="score-box">${t("time")}: <strong id="pictureTime">${formatTime(pictureSeconds)}</strong></div>
+      </div>
+      <div class="picture-grid" style="grid-template-columns:repeat(${pictureSize},1fr)">
+        ${pictureOrder.map((value, index) => `
+          <button class="picture-tile" data-index="${index}"
+            style="background:linear-gradient(135deg,
+              hsl(${value * 35 + 180},65%,55%),
+              hsl(${value * 35 + 220},65%,30%))">
+            <span>${value + 1}</span>
           </button>
-          <button class="pz-secondary" onclick="pzMap()">${pzText("back", "Back")}</button>
-        </div>
+        `).join("")}
+      </div>
+      <div class="game-controls">
+        <button class="game-button" id="pictureEasy">${t("easy")}</button>
+        <button class="game-button" id="pictureMedium">${t("medium")}</button>
+        <button class="game-button" id="pictureHard">${t("hard")}</button>
+        <button class="game-button" id="pictureRestart">${t("restart")}</button>
+      </div>
+      <p class="game-hint">${t("instructions")}</p>
+    `);
+
+    $$(".picture-tile").forEach((tile) => {
+      tile.addEventListener("click", () => {
+        const index = Number(tile.dataset.index);
+        swapPictureTile(index);
+      });
+    });
+
+    $("#pictureEasy")?.addEventListener("click", () => changePictureSize(3));
+    $("#pictureMedium")?.addEventListener("click", () => changePictureSize(4));
+    $("#pictureHard")?.addEventListener("click", () => changePictureSize(5));
+    $("#pictureRestart")?.addEventListener("click", () => {
+      clearInterval(gameTimer);
+      pictureMoves = 0;
+      pictureSeconds = 0;
+      createPicturePuzzle();
+    });
+  }
+
+  function changePictureSize(size) {
+    clearInterval(gameTimer);
+    pictureSize = size;
+    pictureMoves = 0;
+    pictureSeconds = 0;
+    createPicturePuzzle();
+  }
+
+  function swapPictureTile(index) {
+    if (currentGame !== "picturePuzzle") return;
+
+    const emptyIndex = pictureOrder.indexOf(0);
+    if (index === emptyIndex) return;
+
+    const rowA = Math.floor(index / pictureSize);
+    const colA = index % pictureSize;
+    const rowB = Math.floor(emptyIndex / pictureSize);
+    const colB = emptyIndex % pictureSize;
+
+    if (Math.abs(rowA - rowB) + Math.abs(colA - colB) !== 1) return;
+
+    [pictureOrder[index], pictureOrder[emptyIndex]] =
+      [pictureOrder[emptyIndex], pictureOrder[index]];
+
+    pictureMoves++;
+    renderPicturePuzzle();
+
+    if (isPictureSolved()) {
+      clearInterval(gameTimer);
+      recordGame(Math.max(1, 1000 - pictureMoves * 5));
+      awardCoins(10);
+      showPictureMessage(t("youWin") + " +10 🪙");
+    }
+  }
+
+  function isPictureSolved() {
+    return pictureOrder.every((value, index) => value === index);
+  }
+
+  function showPictureMessage(message) {
+    const area = $("#gameArea");
+    if (!area) return;
+
+    const notice = document.createElement("div");
+    notice.className = "notice";
+    notice.textContent = message;
+    area.appendChild(notice);
+  }
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  // ------------------------------
+  // Tic Tac Toe
+  // ------------------------------
+
+  let ticBoard = Array(9).fill("");
+  let ticTurn = "X";
+  let ticFinished = false;
+
+  function startTicTacToe() {
+    currentGame = "tic";
+    ticBoard = Array(9).fill("");
+    ticTurn = "X";
+    ticFinished = false;
+    renderTicTacToe();
+  }
+
+  function renderTicTacToe() {
+    setGameContent(`
+      <div class="game-toolbar">
+        <div class="score-box">${t("yourTurn")}: <strong>${ticTurn}</strong></div>
+      </div>
+      <div class="tic-board">
+        ${ticBoard.map((value, index) => `
+          <button class="tic-cell" data-index="${index}">${value}</button>
+        `).join("")}
+      </div>
+      <p id="ticMessage" class="game-hint">${t("instructions")}</p>
+      <button class="game-button" id="ticRestart">${t("restart")}</button>
+    `);
+
+    $$(".tic-cell").forEach((cell) => {
+      cell.addEventListener("click", () => playTic(Number(cell.dataset.index)));
+    });
+
+    $("#ticRestart")?.addEventListener("click", startTicTacToe);
+  }
+
+  function playTic(index) {
+    if (ticFinished || ticBoard[index]) return;
+
+    ticBoard[index] = ticTurn;
+
+    const winner = getTicWinner();
+
+    if (winner) {
+      ticFinished = true;
+      const message = `${winner} ${t("youWin")}`;
+      recordGame(100);
+      awardCoins(5);
+      renderTicTacToe();
+      $("#ticMessage").textContent = message + " +5 🪙";
+      return;
+    }
+
+    if (ticBoard.every(Boolean)) {
+      ticFinished = true;
+      renderTicTacToe();
+      $("#ticMessage").textContent = t("draw");
+      recordGame(10);
+      return;
+    }
+
+    ticTurn = ticTurn === "X" ? "O" : "X";
+    renderTicTacToe();
+  }
+
+  function getTicWinner() {
+    const lines = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+
+    for (const [a, b, c] of lines) {
+      if (ticBoard[a] && ticBoard[a] === ticBoard[b] && ticBoard[b] === ticBoard[c]) {
+        return ticBoard[a];
+      }
+    }
+
+    return null;
+  }
+
+  // ------------------------------
+  // Aim Trainer
+  // ------------------------------
+
+  let aimScore = 0;
+  let aimRemaining = 20;
+  let aimActive = false;
+
+  function startAimTrainer() {
+    currentGame = "aim";
+    aimScore = 0;
+    aimRemaining = 20;
+    aimActive = true;
+
+    renderAimTrainer();
+
+    gameTimer = setInterval(() => {
+      if (!aimActive) return;
+
+      aimRemaining--;
+
+      const timer = $("#aimTime");
+      if (timer) timer.textContent = aimRemaining;
+
+      if (aimRemaining <= 0) {
+        aimActive = false;
+        clearInterval(gameTimer);
+        recordGame(aimScore);
+        awardCoins(Math.floor(aimScore / 3));
+        renderAimEnd();
+      }
+    }, 1000);
+  }
+
+  function renderAimTrainer() {
+    setGameContent(`
+      <div class="game-toolbar">
+        <div class="score-box">${t("score")}: <strong id="aimScore">0</strong></div>
+        <div class="score-box">${t("time")}: <strong id="aimTime">20</strong></div>
+      </div>
+      <div class="canvas-game" id="aimArea" style="height:300px;position:relative;overflow:hidden">
+        <button class="tap-target" id="aimTarget" aria-label="Target"
+          style="position:absolute;left:40%;top:40%;width:55px;height:55px;border-radius:50%">
+          🎯
+        </button>
+      </div>
+      <p class="game-hint">${t("instructions")}</p>
+    `);
+
+    moveAimTarget();
+
+    $("#aimTarget")?.addEventListener("click", () => {
+      if (!aimActive) return;
+
+      aimScore++;
+      const score = $("#aimScore");
+      if (score) score.textContent = aimScore;
+
+      moveAimTarget();
+    });
+  }
+
+  function moveAimTarget() {
+    const area = $("#aimArea");
+    const target = $("#aimTarget");
+    if (!area || !target) return;
+
+    const maxX = Math.max(0, area.clientWidth - 60);
+    const maxY = Math.max(0, area.clientHeight - 60);
+
+    target.style.left = `${Math.random() * maxX}px`;
+    target.style.top = `${Math.random() * maxY}px`;
+  }
+
+  function renderAimEnd() {
+    setGameContent(`
+      <div class="game-result">
+        <h2>${t("gameOver")}</h2>
+        <p>${t("score")}: ${aimScore}</p>
+        <button class="game-button" id="aimAgain">${t("restart")}</button>
       </div>
     `);
-  }
-}
 
-/* -------------------- PICTURE PUZZLE -------------------- */
-
-function pzOpenPicture() {
-  currentGame = "puzzle";
-
-  const cards = PZ_PICTURE_ART.map((art, index) => `
-    <button class="pz-art-choice" onclick="pzChoosePicture(${index})">
-      <span class="pz-art-preview" style="--a:${art.colors[0]};--b:${art.colors[1]};--c:${art.colors[2]};--d:${art.colors[3]}">
-        <i>${art.symbol}</i>
-      </span>
-      <strong>${art.name}</strong>
-    </button>
-  `).join("");
-
-  showGame(pzText("picture", "Picture Puzzle"), `
-    <div class="pz-picture-home">
-      <button class="pz-back" onclick="pzHome()">← ${pzText("back", "Back")}</button>
-      <h2>${pzText("choosePicture", "Choose a picture")}</h2>
-      <div class="pz-art-grid">${cards}</div>
-      <h3>${pzText("difficulty", "Difficulty")}</h3>
-      <div class="pz-difficulty">
-        <button onclick="pzChoosePicture(0,3)">${pzText("easy", "Easy")} · 3×3</button>
-        <button onclick="pzChoosePicture(0,4)">${pzText("medium", "Medium")} · 4×4</button>
-        <button onclick="pzChoosePicture(0,5)">${pzText("hard", "Hard")} · 5×5</button>
-      </div>
-    </div>
-  `);
-}
-
-function pzChoosePicture(index, size) {
-  const art = PZ_PICTURE_ART[index] || PZ_PICTURE_ART[0];
-  const dimension = size || 3;
-
-  gameData = {
-    pzPicture: true,
-    art,
-    artIndex: index,
-    size: dimension,
-    tiles: [],
-    moves: 0,
-    solved: false,
-    preview: false
-  };
-
-  const count = dimension * dimension;
-  gameData.tiles = Array.from({ length: count }, (_, i) => i);
-
-  let attempts = 0;
-  do {
-    for (let i = gameData.tiles.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [gameData.tiles[i], gameData.tiles[j]] =
-        [gameData.tiles[j], gameData.tiles[i]];
-    }
-    attempts++;
-  } while (
-    attempts < 100 &&
-    (
-      !pzPictureSolvable(gameData.tiles, dimension) ||
-      pzPictureIsSolved(gameData.tiles)
-    )
-  );
-
-  pzDrawPicture();
-}
-
-function pzPictureSolvable(tiles, size) {
-  let inversions = 0;
-
-  for (let i = 0; i < tiles.length; i++) {
-    if (tiles[i] === tiles.length - 1) continue;
-    for (let j = i + 1; j < tiles.length; j++) {
-      if (tiles[j] !== tiles.length - 1 && tiles[i] > tiles[j]) {
-        inversions++;
-      }
-    }
+    $("#aimAgain")?.addEventListener("click", startAimTrainer);
   }
 
-  if (size % 2 === 1) return inversions % 2 === 0;
+  // ------------------------------
+  // Car Dodge
+  // ------------------------------
 
-  const blankRowFromBottom =
-    size - Math.floor(tiles.indexOf(tiles.length - 1) / size);
+  let carPosition = 1;
+  let carScore = 0;
+  let carRunning = false;
+  let carObstacle = -1;
+  let carTick = 0;
 
-  return (inversions + blankRowFromBottom) % 2 === 1;
-}
+  function startCarGame() {
+    currentGame = "car";
+    carPosition = 1;
+    carScore = 0;
+    carObstacle = -1;
+    carTick = 0;
+    carRunning = true;
 
-function pzPictureIsSolved(tiles) {
-  return tiles.every((value, index) => value === index);
-}
+    renderCarGame();
 
-function pzPictureTileStyle(tile, size, art) {
-  if (tile === size * size - 1) return "";
+    gameTimer = setInterval(() => {
+      if (!carRunning) return;
 
-  const x = tile % size;
-  const y = Math.floor(tile / size);
-  const positionX = size === 1 ? 0 : (x / (size - 1)) * 100;
-  const positionY = size === 1 ? 0 : (y / (size - 1)) * 100;
-
-  return `
-    --tile-x:${positionX}%;
-    --tile-y:${positionY}%;
-    --a:${art.colors[0]};
-    --b:${art.colors[1]};
-    --c:${art.colors[2]};
-    --d:${art.colors[3]};
-  `;
-}
-
-function pzDrawPicture() {
-  const g = gameData;
-  if (!g || !g.pzPicture) return;
-
-  const size = g.size;
-  const blank = size * size - 1;
-
-  const tiles = g.tiles.map((tile, index) => {
-    const empty = tile === blank;
-    return `
-      <button
-        class="pz-picture-tile ${empty ? "is-empty" : ""}"
-        style="${pzPictureTileStyle(tile, size, g.art)}"
-        onclick="pzPictureMove(${index})"
-        ${empty || g.solved ? "disabled" : ""}
-        aria-label="Tile ${tile + 1}"
-      >
-        ${empty ? "" : `<span>${tile + 1}</span>`}
-      </button>
-    `;
-  }).join("");
-
-  const preview = g.preview ? `
-    <div class="pz-picture-preview">
-      <div class="pz-art-full" style="--a:${g.art.colors[0]};--b:${g.art.colors[1]};--c:${g.art.colors[2]};--d:${g.art.colors[3]}">
-        <span>${g.art.symbol}</span>
-      </div>
-    </div>
-  ` : "";
-
-  showGame(pzText("picture", "Picture Puzzle"), `
-    <div class="pz-picture-game">
-      <div class="pz-match-top">
-        <button class="pz-back" onclick="pzOpenPicture()">← ${pzText("back", "Back")}</button>
-        <span>${g.art.name} · ${size}×${size}</span>
-      </div>
-
-      <div class="pz-picture-stats">
-        <div><small>${pzText("pictureMoves", "Moves")}</small><strong>${g.moves}</strong></div>
-        <div><small>${pzText("difficulty", "Difficulty")}</small><strong>${size}×${size}</strong></div>
-        <div><small>${pzText("best", "Best")}</small><strong>${pzData.pictureBest[size] || "—"}</strong></div>
-      </div>
-
-      <div class="pz-picture-board" style="--pz-size:${size}">
-        ${tiles}
-      </div>
-
-      <div class="pz-picture-controls">
-        <button class="pz-secondary" onclick="pzTogglePicturePreview()">
-          ${g.preview ? pzText("hidePreview", "Hide Preview") : pzText("preview", "Preview")}
-        </button>
-        <button class="pz-secondary" onclick="pzChoosePicture(${g.artIndex},${size})">
-          ${pzText("retry", "Retry")}
-        </button>
-      </div>
-
-      ${preview}
-
-      ${g.solved ? `
-        <div class="pz-result">
-          <div class="pz-result-icon">✦</div>
-          <h3>${pzText("pictureSolved", "Picture completed!")}</h3>
-          <p>${pzText("pictureMoves", "Moves")}: ${g.moves}</p>
-          <button class="pz-primary" onclick="pzOpenPicture()">${pzText("back", "Back")}</button>
-        </div>
-      ` : ""}
-    </div>
-  `);
-}
-
-function pzTogglePicturePreview() {
-  if (!gameData || !gameData.pzPicture) return;
-  gameData.preview = !gameData.preview;
-  pzDrawPicture();
-}
-
-function pzPictureMove(index) {
-  const g = gameData;
-  if (!g || !g.pzPicture || g.solved) return;
-
-  const blank = g.tiles.indexOf(g.size * g.size - 1);
-  const row = Math.floor(index / g.size);
-  const col = index % g.size;
-  const blankRow = Math.floor(blank / g.size);
-  const blankCol = blank % g.size;
-
-  if (Math.abs(row - blankRow) + Math.abs(col - blankCol) !== 1) return;
-
-  [g.tiles[index], g.tiles[blank]] = [g.tiles[blank], g.tiles[index]];
-  g.moves++;
-
-  if (pzPictureIsSolved(g.tiles)) {
-    g.solved = true;
-    const previous = Number(pzData.pictureBest[g.size]) || Infinity;
-    pzData.pictureBest[g.size] = Math.min(previous, g.moves);
-    pzSave();
-  }
-
-  pzDrawPicture();
-}
-
-/* -------------------- 2048 -------------------- */
-
-function pzOpen2048() {
-  currentGame = "puzzle";
-
-  gameData = {
-    pz2048: true,
-    board: Array.from({ length: 4 }, () => Array(4).fill(0)),
-    score: 0,
-    won: false,
-    continued: false,
-    over: false,
-    pointerStart: null
-  };
-
-  pzAdd2048Tile();
-  pzAdd2048Tile();
-  pzDraw2048();
-}
-
-function pzAdd2048Tile() {
-  const g = gameData;
-  if (!g || !g.pz2048) return;
-
-  const empty = [];
-
-  for (let r = 0; r < 4; r++) {
-    for (let c = 0; c < 4; c++) {
-      if (!g.board[r][c]) empty.push({ r, c });
-    }
-  }
-
-  if (!empty.length) return;
-
-  const cell = empty[Math.floor(Math.random() * empty.length)];
-  g.board[cell.r][cell.c] = Math.random() < 0.9 ? 2 : 4;
-}
-
-function pzDraw2048() {
-  const g = gameData;
-  if (!g || !g.pz2048) return;
-
-  const cells = g.board.flat().map(value => `
-    <div class="pz-2048-cell tile-${value || 0}">
-      ${value || ""}
-    </div>
-  `).join("");
-
-  const best = Math.max(pzData.best2048, g.score);
-
-  showGame(pzText("game2048", "2048"), `
-    <div class="pz-2048">
-      <div class="pz-match-top">
-        <button class="pz-back" onclick="pzHome()">← ${pzText("back", "Back")}</button>
-        <span>GAMEVERSE</span>
-      </div>
-
-      <div class="pz-2048-heading">
-        <h2>2048</h2>
-        <p>Join the numbers and reach 2048.</p>
-      </div>
-
-      <div class="pz-2048-scores">
-        <div><small>${pzText("score", "Score")}</small><strong>${g.score}</strong></div>
-        <div><small>${pzText("best", "Best")}</small><strong>${best}</strong></div>
-      </div>
-
-      <div class="pz-2048-board" id="pz2048Board">
-        ${cells}
-      </div>
-
-      <p class="pz-2048-hint">Swipe, drag, or use your keyboard to move the tiles.</p>
-
-      <div class="pz-2048-controls">
-        <button class="pz-secondary" onclick="pzOpen2048()">${pzText("newGame", "New Game")}</button>
-      </div>
-
-      ${g.won && !g.continued ? `
-        <div class="pz-result pz-2048-overlay">
-          <div class="pz-result-icon">2048</div>
-          <h3>${pzText("reached2048", "2048 reached!")}</h3>
-          <p>${pzText("score", "Score")}: ${g.score}</p>
-          <button class="pz-primary" onclick="pzContinue2048()">${pzText("continue", "Continue")}</button>
-          <button class="pz-secondary" onclick="pzOpen2048()">${pzText("newGame", "New Game")}</button>
-        </div>
-      ` : ""}
-
-      ${g.over ? `
-        <div class="pz-result pz-2048-overlay">
-          <div class="pz-result-icon">2048</div>
-          <h3>${pzText("gameOver", "No more moves")}</h3>
-          <p>${pzText("score", "Score")}: ${g.score}</p>
-          <button class="pz-primary" onclick="pzOpen2048()">${pzText("newGame", "New Game")}</button>
-        </div>
-      ` : ""}
-    </div>
-  `);
-
-  const board = document.getElementById("pz2048Board");
-  if (board) {
-    board.addEventListener("pointerdown", pz2048PointerDown);
-    board.addEventListener("pointerup", pz2048PointerUp);
-    board.addEventListener("pointercancel", pz2048PointerCancel);
-  }
-}
-
-function pz2048PointerDown(event) {
-  if (!gameData || !gameData.pz2048 || gameData.over) return;
-
-  gameData.pointerStart = {
-    x: event.clientX,
-    y: event.clientY
-  };
-}
-
-function pz2048PointerUp(event) {
-  const g = gameData;
-  if (!g || !g.pz2048 || g.over || !g.pointerStart) return;
-
-  const dx = event.clientX - g.pointerStart.x;
-  const dy = event.clientY - g.pointerStart.y;
-  g.pointerStart = null;
-
-  if (Math.max(Math.abs(dx), Math.abs(dy)) < 22) return;
-
-  if (Math.abs(dx) > Math.abs(dy)) {
-    pzMove2048(dx > 0 ? "right" : "left");
-  } else {
-    pzMove2048(dy > 0 ? "down" : "up");
-  }
-}
-
-function pz2048PointerCancel() {
-  if (gameData && gameData.pz2048) {
-    gameData.pointerStart = null;
-  }
-}
-
-function pzContinue2048() {
-  if (!gameData || !gameData.pz2048) return;
-  gameData.continued = true;
-  pzDraw2048();
-}
-
-function pzMove2048(direction) {
-  const g = gameData;
-  if (!g || !g.pz2048 || g.over || (g.won && !g.continued)) return;
-
-  const before = g.board.map(row => row.slice());
-  let gained = 0;
-
-  for (let i = 0; i < 4; i++) {
-    let line = [];
-
-    for (let j = 0; j < 4; j++) {
-      if (direction === "left") line.push(g.board[i][j]);
-      if (direction === "right") line.push(g.board[i][3 - j]);
-      if (direction === "up") line.push(g.board[j][i]);
-      if (direction === "down") line.push(g.board[3 - j][i]);
-    }
-
-    line = line.filter(value => value !== 0);
-
-    const merged = [];
-
-    for (let j = 0; j < line.length; j++) {
-      if (line[j] === line[j + 1]) {
-        const value = line[j] * 2;
-        merged.push(value);
-        gained += value;
-        j++;
+      carTick++;
+      if (carTick % 3 === 0) {
+        carObstacle = Math.floor(Math.random() * 3);
       } else {
-        merged.push(line[j]);
-      }
-    }
-
-    while (merged.length < 4) merged.push(0);
-
-    for (let j = 0; j < 4; j++) {
-      if (direction === "left") g.board[i][j] = merged[j];
-      if (direction === "right") g.board[i][3 - j] = merged[j];
-      if (direction === "up") g.board[j][i] = merged[j];
-      if (direction === "down") g.board[3 - j][i] = merged[j];
-    }
-  }
-
-  const changed = before.some((row, r) =>
-    row.some((value, c) => value !== g.board[r][c])
-  );
-
-  if (!changed) return;
-
-  g.score += gained;
-  pzData.best2048 = Math.max(pzData.best2048, g.score);
-  pzSave();
-
-  pzAdd2048Tile();
-
-  if (!g.won && g.board.some(row => row.some(value => value >= 2048))) {
-    g.won = true;
-  }
-
-  if (!pz2048CanMove(g.board)) {
-    g.over = true;
-  }
-
-  pzDraw2048();
-}
-
-function pz2048CanMove(board) {
-  for (let r = 0; r < 4; r++) {
-    for (let c = 0; c < 4; c++) {
-      if (!board[r][c]) return true;
-
-      if (c < 3 && board[r][c] === board[r][c + 1]) return true;
-      if (r < 3 && board[r][c] === board[r + 1][c]) return true;
-    }
-  }
-  return false;
-}
-
-/* -------------------- END PUZZLE ZONE -------------------- */
-
-function handlePuzzle2048Keys(event) {
-  if (
-    currentGame !== "puzzle" ||
-    !gameData.pz2048 ||
-    gameData.pz2048Over
-  ) return;
-
-  if (
-    ["INPUT", "TEXTAREA", "SELECT"].includes(
-      document.activeElement?.tagName
-    )
-  ) return;
-
-  const directions = {
-    ArrowUp: "up",
-    ArrowDown: "down",
-    ArrowLeft: "left",
-    ArrowRight: "right"
-  };
-
-  const direction = directions[event.key];
-  if (!direction) return;
-
-  event.preventDefault();
-  pzMove2048(direction);
-}
-
-/* ---------- AIM GAME ---------- */
-
-function openAim() {
-  showGame(t("aim"), `
-    <p class="muted">${t("tapTarget")}</p>
-    <div class="big" id="aimScore">0</div>
-    <button class="target" id="targetButton" aria-label="Target"></button>
-    <p class="muted" id="aimStatus"></p>
-  `);
-
-  gameData.score = 0;
-  gameData.remaining = 10;
-  gameData.done = false;
-
-  $("targetButton").onclick = () => {
-    if (gameData.done) return;
-
-    gameData.score++;
-    gameData.remaining--;
-
-    $("aimScore").textContent = gameData.score;
-    $("aimStatus").textContent =
-      `${t("tap")}: ${gameData.remaining}`;
-
-    if (gameData.remaining <= 0) {
-      gameData.done = true;
-
-      $("aimStatus").textContent =
-        `${t("finished")} ${t("score")}: ${gameData.score}`;
-
-      addReward(10, 15, true);
-      recordGame(gameData.score);
-
-      $("targetButton").disabled = true;
-    }
-  };
-}
-
-/* ---------- QUICK RACER AND JUMP ---------- */
-
-function openTapGame(type, total) {
-  const isCar = type === "car";
-  const title = isCar ? t("car") : t("jump");
-
-  showGame(title, `
-    <p class="muted">${t("tapToMove")}</p>
-
-    <div class="big" id="tapProgress">0 / ${total}</div>
-
-    <div class="row">
-      <button class="action" id="tapMove">${t("tap")}</button>
-    </div>
-
-    <p class="muted" id="tapStatus"></p>
-  `);
-
-  gameData.progress = 0;
-  gameData.done = false;
-
-  $("tapMove").onclick = () => {
-    if (gameData.done) return;
-
-    gameData.progress++;
-
-    $("tapProgress").textContent =
-      `${gameData.progress} / ${total}`;
-
-    if (gameData.progress >= total) {
-      gameData.done = true;
-
-      $("tapStatus").textContent = t("finish");
-
-      addReward(12, 18, true);
-      recordGame(total);
-
-      $("tapMove").disabled = true;
-    }
-  };
-}
-
-/* ---------- IMAGE QUIZ ---------- */
-
-function openImageQuiz() {
-  showGame(t("image"), `
-    <p class="muted">${t("imageQuestion")}</p>
-
-    <div class="row">
-      <button class="choice" data-answer="sun">☀️ ${t("sun")}</button>
-      <button class="choice" data-answer="moon">🌙 ${t("moon")}</button>
-      <button class="choice" data-answer="star">⭐ ${t("star")}</button>
-    </div>
-
-    <p class="muted" id="imageStatus"></p>
-  `);
-
-  gameData.answered = false;
-
-  document.querySelectorAll("[data-answer]").forEach(button => {
-    button.onclick = () => {
-      if (gameData.answered) return;
-
-      gameData.answered = true;
-
-      const correct = button.dataset.answer === "sun";
-
-      $("imageStatus").textContent =
-        correct ? t("correctAnswer") : t("wrongAnswer");
-
-      if (correct) {
-        addReward(5, 10, true);
+        carObstacle = -1;
       }
 
-      recordGame(correct ? 1 : 0);
+      if (carObstacle === carPosition) {
+        endCarGame();
+        return;
+      }
 
-      document.querySelectorAll("[data-answer]").forEach(item => {
-        item.disabled = true;
-      });
+      carScore++;
+      renderCarBoard();
+    }, 650);
+  }
+
+  function renderCarGame() {
+    setGameContent(`
+      <div class="game-toolbar">
+        <div class="score-box">${t("score")}: <strong id="carScore">0</strong></div>
+      </div>
+      <div class="canvas-game" id="carBoard" style="height:320px;display:flex;justify-content:space-around;align-items:stretch;background:#17243d;padding:12px">
+        ${[0, 1, 2].map((lane) => `
+          <div class="car-lane" data-lane="${lane}" style="flex:1;border-left:1px dashed #667799;position:relative;text-align:center;font-size:30px">
+            ${lane === carPosition ? '<span class="player-car">🚙</span>' : ""}
+            ${lane === carObstacle ? '<span class="car-obstacle">🚧</span>' : ""}
+          </div>
+        `).join("")}
+      </div>
+      <div class="game-controls">
+        <button class="game-button" id="carLeft">◀</button>
+        <button class="game-button" id="carRight">▶</button>
+      </div>
+      <p class="game-hint">Use the buttons or left/right arrow keys.</p>
+    `);
+
+    $("#carLeft")?.addEventListener("click", () => moveCar(-1));
+    $("#carRight")?.addEventListener("click", () => moveCar(1));
+    renderCarBoard();
+  }
+
+  function renderCarBoard() {
+    const board = $("#carBoard");
+    const score = $("#carScore");
+    if (score) score.textContent = carScore;
+    if (!board) return;
+
+    board.innerHTML = [0, 1, 2].map((lane) => `
+      <div class="car-lane" style="flex:1;border-left:1px dashed #667799;position:relative;text-align:center;font-size:30px">
+        ${lane === carPosition ? '<span class="player-car">🚙</span>' : ""}
+        ${lane === carObstacle ? '<span class="car-obstacle">🚧</span>' : ""}
+      </div>
+    `).join("");
+  }
+
+  function moveCar(direction) {
+    if (!carRunning) return;
+    carPosition = Math.max(0, Math.min(2, carPosition + direction));
+    if (carPosition === carObstacle) {
+      endCarGame();
+      return;
+    }
+    renderCarBoard();
+  }
+
+  function endCarGame() {
+    carRunning = false;
+    clearInterval(gameTimer);
+    recordGame(carScore);
+    awardCoins(Math.floor(carScore / 5));
+
+    setGameContent(`
+      <div class="game-result">
+        <h2>${t("gameOver")}</h2>
+        <p>${t("score")}: ${carScore}</p>
+        <button class="game-button" id="carAgain">${t("restart")}</button>
+      </div>
+    `);
+
+    $("#carAgain")?.addEventListener("click", startCarGame);
+  }
+
+  // ------------------------------
+  // Jump Game
+  // ------------------------------
+
+  let jumpScore = 0;
+  let jumpActive = false;
+  let jumpPlayerY = 0;
+  let jumpObstacleX = 280;
+  let jumpVelocity = 0;
+
+  function startJumpGame() {
+    currentGame = "jump";
+    jumpScore = 0;
+    jumpActive = true;
+    jumpPlayerY = 0;
+    jumpObstacleX = 280;
+    jumpVelocity = 0;
+
+    renderJumpGame();
+
+    const area = $("#jumpArea");
+
+    function jump() {
+      if (!jumpActive || jumpPlayerY > 0) return;
+      jumpVelocity = 13;
+    }
+
+    area?.addEventListener("click", jump);
+
+    const keyHandler = (event) => {
+      if (event.code === "Space" && currentGame === "jump") {
+        event.preventDefault();
+        jump();
+      }
     };
-  });
-}
 
-/* ---------- FOOTBALL ---------- */
+    document.addEventListener("keydown", keyHandler);
 
-function openFootball() {
-  showGame(t("football"), `
-    <p class="muted">${t("kickQuestion")}</p>
+    gameCleanup = () => {
+      document.removeEventListener("keydown", keyHandler);
+    };
 
-    <div class="big">🥅 ⚽</div>
+    gameTimer = setInterval(() => {
+      if (!jumpActive) return;
 
-    <div class="row">
-      <button class="choice" data-kick="left">${t("left")}</button>
-      <button class="choice" data-kick="center">${t("center")}</button>
-      <button class="choice" data-kick="right">${t("right")}</button>
-    </div>
+      jumpVelocity -= 0.8;
+      jumpPlayerY = Math.max(0, jumpPlayerY + jumpVelocity);
 
-    <p class="muted" id="footballStatus"></p>
-  `);
+      if (jumpPlayerY === 0) jumpVelocity = 0;
 
-  gameData.kicked = false;
-
-  document.querySelectorAll("[data-kick]").forEach(button => {
-    button.onclick = () => {
-      if (gameData.kicked) return;
-
-      gameData.kicked = true;
-
-      const goalkeeper =
-        ["left", "center", "right"][
-          Math.floor(Math.random() * 3)
-        ];
-
-      const goal = button.dataset.kick !== goalkeeper;
-
-      $("footballStatus").textContent =
-        goal ? t("goal") : t("wrong");
-
-      if (goal) {
-        addReward(8, 12, true);
+      jumpObstacleX -= 7;
+      if (jumpObstacleX < -30) {
+        jumpObstacleX = 300;
+        jumpScore++;
       }
 
-      recordGame(goal ? 1 : 0);
+      if (jumpObstacleX < 65 && jumpObstacleX > 20 && jumpPlayerY < 35) {
+        endJumpGame();
+        return;
+      }
 
-      document.querySelectorAll("[data-kick]").forEach(item => {
-        item.disabled = true;
-      });
-    };
-  });
-}
-
-/* ---------- PROFILE ---------- */
-
-function showProfile() {
-  closeGame();
-
-  showGame(t("profile"), `
-    <p class="muted">${t("profileText")}</p>
-
-    <div class="stats">
-      <div><b>${data.coins}</b><small>🪙</small></div>
-      <div><b>${data.wins}</b><small>${t("wins")}</small></div>
-      <div><b>${data.played}</b><small>${t("played")}</small></div>
-      <div><b>${data.best}</b><small>${t("best")}</small></div>
-    </div>
-  `);
-}
-
-/* ---------- HELP ---------- */
-
-function showHelp() {
-  closeGame();
-
-  showGame(
-    t("help"),
-    `<p class="muted">${t("helpText")}</p>`
-  );
-}
-
-/* ---------- INITIALIZATION ---------- */
-
-function init() {
-  loadSavedData();
-
-  const tg = window.Telegram?.WebApp;
-
-  if (tg) {
-    tg.ready();
-    tg.expand();
+      drawJumpGame();
+    }, 35);
   }
 
-  $("language").addEventListener("change", event => {
-    setLanguage(event.target.value);
-  });
+  function renderJumpGame() {
+    setGameContent(`
+      <div class="game-toolbar">
+        <div class="score-box">${t("score")}: <strong id="jumpScore">0</strong></div>
+      </div>
+      <div class="canvas-game" id="jumpArea" style="height:220px;position:relative;overflow:hidden;background:linear-gradient(#6b9ed5,#c4e2ff);border-radius:12px">
+        <div id="jumpPlayer" style="position:absolute;bottom:15px;left:35px;font-size:35px">🏃</div>
+        <div id="jumpObstacle" style="position:absolute;bottom:15px;left:280px;font-size:30px">🧱</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:15px;background:#397b43"></div>
+      </div>
+      <p class="game-hint">${t("tapToJump")}</p>
+    `);
+  }
 
-  document.querySelectorAll(".game-card").forEach(button => {
-    button.addEventListener("click", () => {
-      openGame(button.dataset.game);
+  function drawJumpGame() {
+    const player = $("#jumpPlayer");
+    const obstacle = $("#jumpObstacle");
+    const score = $("#jumpScore");
+
+    if (player) player.style.bottom = `${15 + jumpPlayerY}px`;
+    if (obstacle) obstacle.style.left = `${jumpObstacleX}px`;
+    if (score) score.textContent = jumpScore;
+  }
+
+  function endJumpGame() {
+    jumpActive = false;
+    clearInterval(gameTimer);
+    recordGame(jumpScore);
+    awardCoins(Math.floor(jumpScore / 3));
+
+    setGameContent(`
+      <div class="game-result">
+        <h2>${t("gameOver")}</h2>
+        <p>${t("score")}: ${jumpScore}</p>
+        <button class="game-button" id="jumpAgain">${t("restart")}</button>
+      </div>
+    `);
+
+    $("#jumpAgain")?.addEventListener("click", startJumpGame);
+  }
+
+  // ------------------------------
+  // Picture Quiz
+  // ------------------------------
+
+  const quizQuestions = [
+    { emoji: "🍎", answer: "Apple", options: ["Apple", "Car", "House"] },
+    { emoji: "🚗", answer: "Car", options: ["Tree", "Car", "Book"] },
+    { emoji: "🐱", answer: "Cat", options: ["Dog", "Bird", "Cat"] },
+    { emoji: "🌞", answer: "Sun", options: ["Moon", "Sun", "Star"] },
+    { emoji: "⚽", answer: "Ball", options: ["Ball", "Cup", "Hat"] },
+    { emoji: "🍕", answer: "Pizza", options: ["Cake", "Pizza", "Bread"] },
+    { emoji: "🐟", answer: "Fish", options: ["Fish", "Horse", "Lion"] },
+    { emoji: "🌳", answer: "Tree", options: ["Flower", "Tree", "Cloud"] }
+  ];
+
+  let quizIndex = 0;
+  let quizScore = 0;
+  let quizQuestions = [];
+
+  function startPictureQuiz() {
+    currentGame = "image";
+    quizIndex = 0;
+    quizScore = 0;
+    quizQuestions = shuffleArray([...quizQuestionsSource()]).slice(0, 8);
+    renderPictureQuiz();
+  }
+
+  function quizQuestionsSource() {
+    return quizQuestions.length ? quizQuestions : window.__unusedQuizQuestions || quizQuestionsData();
+  }
+
+  function quizQuestionsData() {
+    return [
+      { emoji: "🍎", answer: "Apple", options: ["Apple", "Car", "House"] },
+      { emoji: "🚗", answer: "Car", options: ["Tree", "Car", "Book"] },
+      { emoji: "🐱", answer: "Cat", options: ["Dog", "Bird", "Cat"] },
+      { emoji: "🌞", answer: "Sun", options: ["Moon", "Sun", "Star"] },
+      { emoji: "⚽", answer: "Ball", options: ["Ball", "Cup", "Hat"] },
+      { emoji: "🍕", answer: "Pizza", options: ["Cake", "Pizza", "Bread"] },
+      { emoji: "🐟", answer: "Fish", options: ["Fish", "Horse", "Lion"] },
+      { emoji: "🌳", answer: "Tree", options: ["Flower", "Tree", "Cloud"] }
+    ];
+  }
+
+  function renderPictureQuiz() {
+    if (quizIndex >= quizQuestions.length) {
+      endPictureQuiz();
+      return;
+    }
+
+    const question = quizQuestions[quizIndex];
+
+    setGameContent(`
+      <div class="game-toolbar">
+        <div class="score-box">${t("score")}: <strong>${quizScore}</strong></div>
+        <div class="score-box">${quizIndex + 1}/${quizQuestions.length}</div>
+      </div>
+      <div class="quiz-art" style="font-size:90px;text-align:center;padding:25px">
+        ${question.emoji}
+      </div>
+      <div class="game-controls" id="quizOptions">
+        ${shuffleArray([...question.options]).map((option) => `
+          <button class="game-button quiz-option" data-answer="${option}">${option}</button>
+        `).join("")}
+      </div>
+      <p class="game-hint">${t("instructions")}</p>
+    `);
+
+    $$(".quiz-option").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (button.disabled) return;
+
+        $$(".quiz-option").forEach((item) => item.disabled = true);
+
+        if (button.dataset.answer === question.answer) {
+          quizScore += 10;
+          button.classList.add("correct");
+        } else {
+          button.classList.add("wrong");
+        }
+
+        setTimeout(() => {
+          quizIndex++;
+          renderPictureQuiz();
+        }, 650);
+      });
     });
-  });
+  }
 
-  $("close").addEventListener("click", closeGame);
-  $("homeTab").addEventListener("click", closeGame);
-  $("profileTab").addEventListener("click", showProfile);
-  $("helpTab").addEventListener("click", showHelp);
+  function endPictureQuiz() {
+    recordGame(quizScore);
+    awardCoins(Math.floor(quizScore / 10));
 
-  $("modal").addEventListener("click", event => {
-    if (event.target === $("modal")) {
-      closeGame();
+    setGameContent(`
+      <div class="game-result">
+        <h2>${t("congratulations")}</h2>
+        <p>${t("score")}: ${quizScore}</p>
+        <button class="game-button" id="quizAgain">${t("restart")}</button>
+      </div>
+    `);
+
+    $("#quizAgain")?.addEventListener("click", startPictureQuiz);
+  }
+
+  // ------------------------------
+  // Football Penalty
+  // ------------------------------
+
+  let footballScore = 0;
+  let footballShots = 0;
+  let footballFinished = false;
+
+  function startFootball() {
+    currentGame = "football";
+    footballScore = 0;
+    footballShots = 0;
+    footballFinished = false;
+    renderFootball();
+  }
+
+  function renderFootball() {
+    setGameContent(`
+      <div class="game-toolbar">
+        <div class="score-box">${t("score")}: <strong id="footballScore">${footballScore}</strong></div>
+        <div class="score-box">${t("moves")}: <strong id="footballShots">${footballShots}/5</strong></div>
+      </div>
+      <div class="canvas-game" style="height:260px;background:linear-gradient(#4c9b54,#27723d);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <div style="font-size:65px">🥅</div>
+        <div style="font-size:45px;margin-top:10px" id="footballBall">⚽</div>
+      </div>
+      <div class="game-controls">
+        <button class="game-button" data-shot="left">◀</button>
+        <button class="game-button" data-shot="center">⬆</button>
+        <button class="game-button" data-shot="right">▶</button>
+      </div>
+      <p class="game-hint">${t("shoot")}</p>
+    `);
+
+    $$("[data-shot]").forEach((button) => {
+      button.addEventListener("click", () => shootFootball(button.dataset.shot));
+    });
+  }
+
+  function shootFootball(direction) {
+    if (footballFinished || footballShots >= 5) return;
+
+    footballShots++;
+
+    const goalkeeper = ["left", "center", "right"][Math.floor(Math.random() * 3)];
+    const scored = direction !== goalkeeper;
+
+    if (scored) footballScore++;
+
+    const ball = $("#footballBall");
+    if (ball) ball.textContent = scored ? "⚽" : "🧤";
+
+    const score = $("#footballScore");
+    const shots = $("#footballShots");
+
+    if (score) score.textContent = footballScore;
+    if (shots) shots.textContent = `${footballShots}/5`;
+
+    if (footballShots >= 5) {
+      footballFinished = true;
+      recordGame(footballScore * 20);
+      awardCoins(footballScore * 2);
+
+      const area = $("#gameArea");
+      const result = document.createElement("div");
+      result.className = "notice";
+      result.textContent = `${t("gameOver")} ${footballScore}/5`;
+      area?.appendChild(result);
+
+      const restart = document.createElement("button");
+      restart.className = "game-button";
+      restart.textContent = t("restart");
+      restart.addEventListener("click", startFootball);
+      area?.appendChild(restart);
     }
-  });
+  }
 
-  document.addEventListener("keydown", handlePuzzle2048Keys);
+  // ------------------------------
+  // Start the app
+  // ------------------------------
 
-  applyLanguage();
-}
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 
-document.addEventListener("DOMContentLoaded", init);
+})();
