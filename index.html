@@ -1,172 +1,225 @@
+
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <meta name="theme-color" content="#0b1022">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#090d1b">
   <title>GameVerse</title>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
-
 <body>
-  <div class="app">
+  <div class="app-shell">
 
-    <header class="top">
-      <div>
-        <span class="eyebrow" data-i18n="tagline">
-          ENTER THE WORLD OF GAMES
-        </span>
-        <h1>🎮 GameVerse</h1>
-      </div>
+    <header class="topbar">
+      <a class="brand" href="#">
+        <span class="brand-mark">G</span>
+        <span>Game<span class="brand-accent">Verse</span></span>
+      </a>
 
-      <div class="header-tools">
-        <label class="language-label" for="language" data-i18n="language">
-          Language
-        </label>
-
-        <select id="language">
-          <option value="en">English</option>
-          <option value="fa">فارسی</option>
-          <option value="ar">العربية</option>
-          <option value="tr">Türkçe</option>
-          <option value="es">Español</option>
-        </select>
-
-        <div class="wallet">
-          🪙 <b id="coins">120</b>
-        </div>
-      </div>
+      <select id="language" aria-label="Language">
+        <option value="en">English</option>
+        <option value="fa">فارسی</option>
+        <option value="ar">العربية</option>
+        <option value="tr">Türkçe</option>
+        <option value="es">Español</option>
+      </select>
     </header>
 
-    <section class="profile card">
-      <div class="avatar">👾</div>
-
-      <div class="profile-info">
-        <b id="username">Player</b>
-
-        <small>
-          <span data-i18n="level">Level</span>
-          <span id="level">1</span>
-          ·
-          <span data-i18n="xp">XP</span>
-          <span id="xp">0</span>
-        </small>
-
-        <div class="progress">
-          <i id="xpbar"></i>
+    <main id="homeView">
+      <section class="welcome">
+        <div>
+          <p class="eyebrow" data-i18n="welcome">WELCOME BACK</p>
+          <h1>
+            <span data-i18n="ready">Ready to play?</span>
+            <span class="wave">✦</span>
+          </h1>
+          <p class="muted" data-i18n="subtitle">
+            Pick a game, beat your best and earn rewards.
+          </p>
         </div>
+        <div class="avatar">🎮</div>
+      </section>
+
+      <section class="stats-grid">
+        <article class="stat-card">
+          <span class="stat-icon">🎯</span>
+          <div>
+            <strong id="played">0</strong>
+            <small data-i18n="played">Games played</small>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-icon">🏆</span>
+          <div>
+            <strong id="best">0</strong>
+            <small data-i18n="best">Best score</small>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-icon">💎</span>
+          <div>
+            <strong id="coins">0</strong>
+            <small data-i18n="coins">Coins</small>
+          </div>
+        </article>
+      </section>
+
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow" data-i18n="collection">YOUR COLLECTION</p>
+          <h2 data-i18n="games">Games</h2>
+        </div>
+        <span class="live-pill">
+          <i></i>
+          <span data-i18n="online">READY TO PLAY</span>
+        </span>
       </div>
-    </section>
 
-    <div class="section-head">
-      <div>
-        <h2 data-i18n="games">Games</h2>
-        <p data-i18n="choose">Choose a game and jump in!</p>
-      </div>
+      <section class="game-grid">
+        <button class="game-card featured" data-game="puzzle">
+          <span class="game-emoji">💎</span>
+          <span class="game-info">
+            <b data-i18n="puzzle">Puzzle Zone</b>
+            <small data-i18n="puzzleDesc">Three ways to challenge your mind</small>
+          </span>
+          <span class="card-arrow">↗</span>
+        </button>
 
-      <span class="pill" id="gameCount">7 games</span>
-    </div>
+        <button class="game-card" data-game="tic">
+          <span class="game-emoji">⭕</span>
+          <span class="game-info">
+            <b data-i18n="tic">Tic Tac Toe</b>
+            <small data-i18n="ticDesc">Classic strategy game</small>
+          </span>
+          <span class="card-arrow">↗</span>
+        </button>
 
-    <main id="games" class="games">
+        <button class="game-card" data-game="aim">
+          <span class="game-emoji">🎯</span>
+          <span class="game-info">
+            <b data-i18n="aim">Aim Trainer</b>
+            <small data-i18n="aimDesc">Test your reaction</small>
+          </span>
+          <span class="card-arrow">↗</span>
+        </button>
 
-      <button class="game-card" data-game="tic">
-        <span class="game-icon">⭕</span>
-        <b data-i18n="tic">Ultimate Tic-Tac-Toe</b>
-        <small data-i18n="ticSub">Solo AI or two players</small>
-      </button>
+        <button class="game-card" data-game="car">
+          <span class="game-emoji">🏎️</span>
+          <span class="game-info">
+            <b data-i18n="car">Neon Racer</b>
+            <small data-i18n="carDesc">Dodge the traffic</small>
+          </span>
+          <span class="card-arrow">↗</span>
+        </button>
 
-      <button class="game-card" data-game="puzzle">
-        <span class="game-icon">🧩</span>
-        <b data-i18n="puzzle">Number Puzzle</b>
-        <small data-i18n="puzzleSub">Put the numbers in order</small>
-      </button>
+        <button class="game-card" data-game="jump">
+          <span class="game-emoji">🪂</span>
+          <span class="game-info">
+            <b data-i18n="jump">Sky Jump</b>
+            <small data-i18n="jumpDesc">Jump as high as you can</small>
+          </span>
+          <span class="card-arrow">↗</span>
+        </button>
 
-      <button class="game-card" data-game="aim">
-        <span class="game-icon">🎯</span>
-        <b data-i18n="aim">Target Rush</b>
-        <small data-i18n="aimSub">Test your reaction</small>
-      </button>
+        <button class="game-card" data-game="image">
+          <span class="game-emoji">🖼️</span>
+          <span class="game-info">
+            <b data-i18n="image">Picture Quiz</b>
+            <small data-i18n="imageDesc">Guess the hidden picture</small>
+          </span>
+          <span class="card-arrow">↗</span>
+        </button>
 
-      <button class="game-card" data-game="car">
-        <span class="game-icon">🏎️</span>
-        <b data-i18n="car">Quick Racer</b>
-        <small data-i18n="carSub">Complete 10 moves</small>
-      </button>
-
-      <button class="game-card" data-game="jump">
-        <span class="game-icon">🐸</span>
-        <b data-i18n="jump">Jump Challenge</b>
-        <small data-i18n="jumpSub">Reach the finish line</small>
-      </button>
-
-      <button class="game-card" data-game="image">
-        <span class="game-icon">🖼️</span>
-        <b data-i18n="image">Picture Quiz</b>
-        <small data-i18n="imageSub">What do you see?</small>
-      </button>
-
-      <button class="game-card" data-game="football">
-        <span class="game-icon">⚽</span>
-        <b data-i18n="football">Penalty Kick</b>
-        <small data-i18n="footballSub">Beat the goalkeeper</small>
-      </button>
-
+        <button class="game-card" data-game="football">
+          <span class="game-emoji">⚽</span>
+          <span class="game-info">
+            <b data-i18n="football">Penalty Kick</b>
+            <small data-i18n="footballDesc">Beat the goalkeeper</small>
+          </span>
+          <span class="card-arrow">↗</span>
+        </button>
+      </section>
     </main>
 
-    <section class="card stats">
-      <div>
-        <b id="wins">0</b>
-        <small data-i18n="wins">Wins</small>
+    <section id="profileView" class="page-view hidden">
+      <p class="eyebrow" data-i18n="profile">PROFILE</p>
+      <h1 data-i18n="yourStats">Your stats</h1>
+
+      <div class="profile-card">
+        <div class="avatar large">🎮</div>
+        <h2>GameVerse Player</h2>
+        <p class="muted" data-i18n="keepPlaying">
+          Keep playing to build your record.
+        </p>
       </div>
 
-      <div>
-        <b id="played">0</b>
-        <small data-i18n="played">Played</small>
-      </div>
+      <div class="stats-grid profile-stats">
+        <article class="stat-card">
+          <strong id="profilePlayed">0</strong>
+          <small data-i18n="played">Games played</small>
+        </article>
 
-      <div>
-        <b id="best">0</b>
-        <small data-i18n="best">Best score</small>
+        <article class="stat-card">
+          <strong id="profileBest">0</strong>
+          <small data-i18n="best">Best score</small>
+        </article>
+
+        <article class="stat-card">
+          <strong id="profileCoins">0</strong>
+          <small data-i18n="coins">Coins</small>
+        </article>
       </div>
     </section>
 
-    <nav class="bottom">
+    <section id="helpView" class="page-view hidden">
+      <p class="eyebrow" data-i18n="help">HELP</p>
+      <h1 data-i18n="howToPlay">How to play</h1>
 
+      <div class="help-card">
+        <p data-i18n="helpText">
+          Choose any game card to start. Your coins, language and best score are saved on this device.
+        </p>
+        <p>
+          ✨
+          <span data-i18n="telegramTip">
+            GameVerse works inside Telegram Mini Apps.
+          </span>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bottom-nav">
       <button class="active" id="homeTab">
-        ⌂
-        <small data-i18n="home">Home</small>
+        ⌂ <span data-i18n="home">Home</span>
       </button>
-
       <button id="profileTab">
-        ♙
-        <small data-i18n="profile">Profile</small>
+        ◉ <span data-i18n="profile">Profile</span>
       </button>
-
       <button id="helpTab">
-        ⓘ
-        <small data-i18n="help">Help</small>
+        ? <span data-i18n="help">Help</span>
       </button>
-
     </nav>
 
   </div>
 
-  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
-
-    <div class="dialog">
-
-      <button class="close" id="close" aria-label="Close">
-        ✕
-      </button>
-
-      <h2 id="gameTitle">Game</h2>
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="gameTitle">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">GAMEVERSE ARCADE</p>
+          <h2 id="gameTitle">Game</h2>
+        </div>
+        <button id="close" class="close-btn" aria-label="Close">×</button>
+      </div>
 
       <div id="gameArea"></div>
-
     </div>
-
   </div>
 
   <script src="app.js"></script>
