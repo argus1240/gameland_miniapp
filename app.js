@@ -377,6 +377,31 @@ function openGame(game) {
 }
 
 
+
+function getTicStats() {
+  const defaults = {
+    matches: 0,
+    championships: 0,
+    losses: 0,
+    draws: 0,
+    currentStreak: 0,
+    bestStreak: 0
+  };
+
+  try {
+    return {
+      ...defaults,
+      ...JSON.parse(localStorage.getItem("gvTicStats") || "{}")
+    };
+  } catch {
+    return defaults;
+  }
+}
+
+function saveTicStats(stats) {
+  localStorage.setItem("gvTicStats", JSON.stringify(stats));
+}
+
 function openTic() {
   showGame(t("tic"), `
     <p class="muted">${t("nineBoards")}</p>
@@ -393,15 +418,29 @@ function openTic() {
     </div>
 
     <div class="tic-info">
+      <p class="muted" id="ticMatchInfo"></p>
+      <p class="muted" id="ticStatsInfo"></p>
       <p class="muted" id="ticStatus">${t("chooseMode")}</p>
       <p class="muted" id="ticBoardInfo"></p>
     </div>
 
     <div id="ultimateBoard" class="ultimate-board"></div>
+
+    <div class="tic-toolbar" id="ticMatchActions"></div>
   `);
 
   gameData.mode = null;
   gameData.difficulty = "medium";
+
+  gameData.ticMatch = {
+    xWins: 0,
+    oWins: 0,
+    draws: 0,
+    round: 1,
+    completed: false
+  };
+
+  updateTicStatsDisplay();
 
   $("solo").onclick = () => {
     gameData.mode = "solo";
@@ -417,11 +456,30 @@ function openTic() {
   document.querySelectorAll("[data-difficulty]").forEach(button => {
     button.onclick = () => {
       if (gameData.mode !== "solo") return;
-
       gameData.difficulty = button.dataset.difficulty;
       startTic();
     };
   });
+}
+
+function updateTicStatsDisplay() {
+  const stats = getTicStats();
+  const element = $("ticStatsInfo");
+
+  if (!element) return;
+
+  element.textContent =
+    `🏆 ${stats.championships}  |  ❌ ${stats.losses}  |  🤝 ${stats.draws}  |  🔥 ${stats.bestStreak}`;
+}
+
+function updateTicMatchDisplay() {
+  const match = gameData.ticMatch;
+  const element = $("ticMatchInfo");
+
+  if (!element || !match) return;
+
+  element.textContent =
+    `ROUND ${Math.min(match.round, 3)}/3   |   X: ${match.xWins}   O: ${match.oWins}   Draw: ${match.draws}`;
 }
 
 function startTic() {
@@ -433,8 +491,12 @@ function startTic() {
   gameData.rewarded = false;
   gameData.lastMove = null;
 
-  $("difficultyArea").classList.add("hidden");
+  clearTimeout(gameTimer);
 
+  $("difficultyArea").classList.add("hidden");
+  $("ticMatchActions").innerHTML = "";
+
+  updateTicMatchDisplay();
   drawTic();
 }
 
@@ -548,7 +610,9 @@ function drawTic() {
     if (gameData.wonBoards[boardIndex]) {
       const label = document.createElement("div");
       label.className = "tic-board-winner";
-      label.textContent = gameData.wonBoards[boardIndex];
+      label.textContent = gameData.wonBoards[boardIndex] === "D"
+        ? "—"
+        : gameData.wonBoards[boardIndex];
       small.appendChild(label);
     } else if (board.every(Boolean)) {
       const label = document.createElement("div");
@@ -560,6 +624,8 @@ function drawTic() {
     small.appendChild(grid);
     boardElement.appendChild(small);
   });
+
+  updateTicMatchDisplay();
 
   const status = $("ticStatus");
   const boardInfo = $("ticBoardInfo");
@@ -587,11 +653,16 @@ function drawTic() {
 
 function playTic(boardIndex, cellIndex) {
   if (gameData.finished) return;
+  if (gameData.ticMatch.completed) return;
+
   if (gameData.mode === "solo" && gameData.player === "O") return;
   if (ticBoardResolved(boardIndex)) return;
-  if (gameData.activeBoard !== -1 &&
-      !ticBoardResolved(gameData.activeBoard) &&
-      gameData.activeBoard !== boardIndex) return;
+
+  if (
+    gameData.activeBoard !== -1 &&
+    !ticBoardResolved(gameData.activeBoard) &&
+    gameData.activeBoard !== boardIndex
+  ) return;
 
   if (gameData.boards[boardIndex][cellIndex]) return;
 
@@ -771,8 +842,105 @@ function finishTic(result) {
     }
   }
 
+  const match = gameData.ticMatch;
+
+  if (result === "X") match.xWins++;
+  else if (result === "O") match.oWins++;
+  else match.draws++;
+
+  const matchFinished =
+    match.xWins === 2 ||
+    match.oWins === 2 ||
+    match.round === 3;
+
+  if (matchFinished) {
+    finishTicMatch();
+  } else {
+    const actions = $("ticMatchActions");
+
+    if (actions) {
+      const nextButton = document.createElement("button");
+      nextButton.className = "action";
+      nextButton.textContent = "▶ Next Round";
+
+      nextButton.onclick = () => {
+        match.round++;
+        startTic();
+      };
+
+      actions.innerHTML = "";
+      actions.appendChild(nextButton);
+    }
+  }
+
   drawTic();
 }
+
+function finishTicMatch() {
+  const match = gameData.ticMatch;
+
+  if (match.completed) return;
+  match.completed = true;
+
+  const stats = getTicStats();
+  stats.matches++;
+
+  let message;
+
+  if (match.xWins > match.oWins) {
+    stats.championships++;
+    stats.currentStreak++;
+    stats.bestStreak = Math.max(
+      stats.bestStreak,
+      stats.currentStreak
+    );
+    message = "🏆 YOU WON THE MATCH!";
+  } else if (match.oWins > match.xWins) {
+    stats.losses++;
+    stats.currentStreak = 0;
+    message = "💔 MATCH LOST!";
+  } else {
+    stats.draws++;
+    stats.currentStreak = 0;
+    message = "🤝 MATCH DRAW!";
+  }
+
+  saveTicStats(stats);
+  updateTicStatsDisplay();
+
+  const status = $("ticStatus");
+  if (status) status.textContent = message;
+
+  const info = $("ticBoardInfo");
+  if (info) {
+    info.textContent =
+      `Final Score: X ${match.xWins} - O ${match.oWins}`;
+  }
+
+  const actions = $("ticMatchActions");
+
+  if (actions) {
+    const again = document.createElement("button");
+    again.className = "action";
+    again.textContent = "🏆 New Match";
+
+    again.onclick = () => {
+      gameData.ticMatch = {
+        xWins: 0,
+        oWins: 0,
+        draws: 0,
+        round: 1,
+        completed: false
+      };
+
+      startTic();
+    };
+
+    actions.innerHTML = "";
+    actions.appendChild(again);
+  }
+}
+
 
 function openPuzzle() {
   showGame(t("puzzle"), `
