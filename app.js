@@ -1228,7 +1228,7 @@ function pzChapterName(stage) {
 }
 
 function pzStageGoal(stage) {
-  return 450 + Math.floor(stage * 24) + Math.floor(stage / 25) * 100;
+  return 450 + Math.floor(stage / 100) * 90;
 }
 
 function pzStageMoves(stage) {
